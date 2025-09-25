@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import ContactForm from "./components/ContactForm";
 
 export default function Home() {
@@ -9,15 +8,7 @@ export default function Home() {
       <header className="sticky top-0 bg-white border-b border-gray-200 z-50">
         <div className="max-w-7xl mx-auto flex justify-between items-center px-6 h-16">
           <Link href="/" className="flex items-center gap-3">
-            <Image
-              src="/sueep.svg"
-              alt="Sueep logo"
-              width={120}
-              height={60}
-              priority
-              suppressHydrationWarning
-              className="h-10 md:h-12 w-auto logo-image"
-            />
+            <img src="/sueeplogo.png" alt="Sueep logo" className="h-12 w-auto" />
           </Link>
           <nav className="hidden md:flex gap-8 text-sm font-medium">
             <a href="#about" className="hover:text-[#E73C6E]">About</a>
@@ -179,7 +170,7 @@ export default function Home() {
       <footer className="bg-black text-gray-400 text-sm py-6">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col items-center justify-center gap-3">
-            <img src="/sueep.svg" alt="Sueep logo" className="h-12 md:h-14 lg:h-16 w-auto" />
+                <img src="/sueeplogo.png" alt="Sueep logo" className="h-12 md:h-14 lg:h-16 w-auto" />
             <div className="flex gap-3">
               <a href="https://www.facebook.com/SueepOfficial" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transition text-[#E73C6E] hover:text-white">
                 <svg viewBox="0 0 24 24" className="w-5 h-5 md:w-6 md:h-6" aria-hidden="true">

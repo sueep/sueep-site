@@ -15,6 +15,18 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Sueep — Commercial Cleaning & Construction Services",
   description: "Commercial Cleaning services for construction final cleans, janitorial, and painting across PA, NJ, and NY.",
+  icons: {
+    icon: [
+      { url: "/sueepicon.jpeg?v=2", sizes: "32x32" },
+      { url: "/sueepicon.jpeg?v=2", sizes: "16x16" },
+    ],
+    shortcut: "/sueepicon.jpeg?v=2",
+    apple: "/sueepicon.jpeg?v=2",
+    other: [
+      // Safari pinned tab (will be ignored if not found)
+      { rel: "mask-icon", url: "/safari-pinned-tab.svg", color: "#E73C6E" },
+    ],
+  },
   openGraph: {
     title: "Sueep — Commercial Cleaning & Construction Services",
     description: "Commercial Cleaning services for construction final cleans, janitorial, and painting across PA, NJ, and NY.",

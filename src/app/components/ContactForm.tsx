@@ -28,10 +28,10 @@ export default function ContactForm() {
         <input type="hidden" name="_subject" value="New website inquiry from sueep.com" />
         <input type="hidden" name="_template" value="table" />
         <input type="hidden" name="_captcha" value="false" />
-        <input name="name" type="text" placeholder="Full Name" className="w-full rounded-md px-4 py-3 text-gray-900 text-base" required />
-        <input name="_replyto" type="email" placeholder="Email" className="w-full rounded-md px-4 py-3 text-gray-900 text-base" required />
-        <input name="company" type="text" placeholder="Company / Property" className="w-full rounded-md px-4 py-3 text-gray-900 text-base" />
-        <textarea name="message" placeholder="Scope, timelines, requirements" rows={5} className="w-full rounded-md px-4 py-3 text-gray-900 text-base" required></textarea>
+        <input name="name" type="text" placeholder="Full Name" className="w-full rounded-md px-4 py-3 text-base bg-white text-gray-900 placeholder-gray-500 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#E73C6E]/50 focus:border-[#E73C6E]" required />
+        <input name="_replyto" type="email" placeholder="Email" className="w-full rounded-md px-4 py-3 text-base bg-white text-gray-900 placeholder-gray-500 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#E73C6E]/50 focus:border-[#E73C6E]" required />
+        <input name="company" type="text" placeholder="Company / Property" className="w-full rounded-md px-4 py-3 text-base bg-white text-gray-900 placeholder-gray-500 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#E73C6E]/50 focus:border-[#E73C6E]" />
+        <textarea name="message" placeholder="Scope, timelines, requirements" rows={5} className="w-full rounded-md px-4 py-3 text-base bg-white text-gray-900 placeholder-gray-500 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#E73C6E]/50 focus:border-[#E73C6E]" required></textarea>
         <button type="submit" className="px-6 py-3 bg-[#E73C6E] text-white font-medium rounded-md hover:opacity-90">Send</button>
       </form>
     </div>
