@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
+import ContactForm from "./components/ContactForm";
 
 export default function Home() {
   return (
@@ -7,7 +9,15 @@ export default function Home() {
       <header className="sticky top-0 bg-white border-b border-gray-200 z-50">
         <div className="max-w-7xl mx-auto flex justify-between items-center px-6 h-16">
           <Link href="/" className="flex items-center gap-3">
-            <img src="/sueep.svg" alt="Sueep logo" className="h-10 md:h-12 w-auto" />
+            <Image
+              src="/sueep.svg"
+              alt="Sueep logo"
+              width={120}
+              height={60}
+              priority
+              suppressHydrationWarning
+              className="h-10 md:h-12 w-auto logo-image"
+            />
           </Link>
           <nav className="hidden md:flex gap-8 text-sm font-medium">
             <a href="#about" className="hover:text-[#E73C6E]">About</a>
@@ -25,11 +35,12 @@ export default function Home() {
       {/* Hero */}
       <section className="relative h-[80vh] flex items-center justify-center text-center">
         <img src="/hero.jpg" alt="Commercial project" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/15 to-black/10" />
         <div className="relative z-10 px-6">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-white uppercase tracking-wide">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-white uppercase tracking-wide text-shadow-md">
             Commercial Cleaning & Construction Services
           </h1>
-          <p className="mt-4 text-lg text-gray-200 max-w-2xl mx-auto">
+          <p className="mt-4 text-lg text-white font-medium max-w-2xl mx-auto text-shadow-sm">
             Trusted by property managers and general contractors for over 20 years.  
             Delivering large-scale janitorial, final cleans, and painting programs across PA, NJ, and NY.
           </p>
@@ -88,7 +99,7 @@ export default function Home() {
             { img: "/projects/Birchwood.jpg", name: "Birchwood", detail: "New development" },
           ].map((proj) => (
             <div key={proj.name} className="overflow-hidden border border-gray-200">
-              <img src={proj.img} alt={proj.name} className="w-full h-56 object-cover grayscale hover:grayscale-0 transition" />
+              <img src={proj.img} alt={proj.name} className="w-full h-56 object-cover transition" />
               <div className="p-4">
                 <h3 className="font-semibold">{proj.name}</h3>
                 <p className="text-sm text-gray-600">{proj.detail}</p>
@@ -151,15 +162,8 @@ export default function Home() {
       {/* Contact */}
       <section id="contact" className="bg-gray-900 text-white py-20">
         <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-8 md:gap-10 items-start">
-          <div>
-            <h2 className="text-2xl md:text-3xl font-bold uppercase">Contact Us</h2>
-            <form className="mt-6 space-y-4" method="post" action="/api/contact">
-              <input name="name" type="text" placeholder="Full Name" className="w-full rounded-md px-4 py-3 text-gray-900 text-base" required />
-              <input name="email" type="email" placeholder="Email" className="w-full rounded-md px-4 py-3 text-gray-900 text-base" required />
-              <input name="company" type="text" placeholder="Company / Property" className="w-full rounded-md px-4 py-3 text-gray-900 text-base" />
-              <textarea name="message" placeholder="Scope, timelines, requirements" rows={5} className="w-full rounded-md px-4 py-3 text-gray-900 text-base" required></textarea>
-              <button type="submit" className="px-6 py-3 bg-[#E73C6E] text-white font-medium rounded-md hover:opacity-90">Send</button>
-            </form>
+          <div suppressHydrationWarning>
+            <ContactForm />
           </div>
           <div className="md:text-right md:pl-8">
             <h3 className="font-semibold text-xl md:text-2xl">Sueep Headquarters</h3>

@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 const TO_EMAIL = process.env.CONTACT_TO_EMAIL || "contact@sueep.com";
+const FROM_EMAIL = process.env.RESEND_FROM || "Sueep Website <noreply@mail.sueep.com>";
 
 export async function POST(req: NextRequest) {
   try {
     const contentType = req.headers.get("content-type") || "";
+    const isFormPost =
+      contentType.includes("application/x-www-form-urlencoded") ||
+      contentType.includes("multipart/form-data");
     let name = "";
     let email = "";
     let company = "";
@@ -42,23 +46,51 @@ export async function POST(req: NextRequest) {
 
     if (!process.env.RESEND_API_KEY) {
       console.warn("RESEND_API_KEY not set - skipping actual email send. Returning success for dev.");
-      return NextResponse.json({ ok: true });
+      if (isFormPost) {
+        return NextResponse.redirect(new URL("/thank-you?status=skipped", req.url), { status: 303 });
+      }
+      return NextResponse.json({ ok: true, skipped: true });
     }
 
     const resend = new Resend(process.env.RESEND_API_KEY);
-    await resend.emails.send({
-      from: "Sueep Website <noreply@mail.sueep.com>",
+    const payload = {
+      from: FROM_EMAIL,
       to: TO_EMAIL,
       subject,
       html,
       reply_to: email,
+    } as const;
+    console.log("/api/contact sending via Resend:", {
+      from: payload.from,
+      to: payload.to,
+      hasKey: Boolean(process.env.RESEND_API_KEY),
     });
+    await resend.emails.send(payload);
 
+    if (isFormPost) {
+      return NextResponse.redirect(new URL("/thank-you?status=ok", req.url), { status: 303 });
+    }
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("/api/contact error", err);
+    try {
+      const contentType = req.headers.get("content-type") || "";
+      const isFormPost =
+        contentType.includes("application/x-www-form-urlencoded") ||
+        contentType.includes("multipart/form-data");
+      if (isFormPost) {
+        return NextResponse.redirect(new URL("/thank-you?status=error", req.url), { status: 303 });
+      }
+    } catch {}
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
+}
+
+export async function GET() {
+  const hasKey = Boolean(process.env.RESEND_API_KEY);
+  const from = process.env.RESEND_FROM || null;
+  const to = process.env.CONTACT_TO_EMAIL || "contact@sueep.com";
+  return NextResponse.json({ hasKey, from, to });
 }
 
 function escapeHtml(input: string) {
