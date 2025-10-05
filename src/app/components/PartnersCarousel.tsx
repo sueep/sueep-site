@@ -62,7 +62,9 @@ export default function PartnersCarousel({ partners, intervalMs = 4000 }: Partne
           {safePartners.map((partner, idx) => (
             <div
               key={partner.name}
-              ref={(el) => (itemRefs.current[idx] = el)}
+              ref={(el) => {
+                itemRefs.current[idx] = el;
+              }}
               className="snap-center shrink-0"
             >
               <div className="text-center flex flex-col">
