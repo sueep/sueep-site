@@ -12,6 +12,7 @@ export async function POST(req: NextRequest) {
     let name = "";
     let email = "";
     let company = "";
+    let phone = "";
     let message = "";
 
     if (contentType.includes("application/json")) {
@@ -19,16 +20,18 @@ export async function POST(req: NextRequest) {
       name = String(body?.name || "");
       email = String(body?.email || "");
       company = String(body?.company || "");
+      phone = String(body?.phone || "");
       message = String(body?.message || "");
     } else if (contentType.includes("application/x-www-form-urlencoded") || contentType.includes("multipart/form-data")) {
       const form = await req.formData();
       name = String(form.get("name") || "");
       email = String(form.get("email") || "");
       company = String(form.get("company") || "");
+      phone = String(form.get("phone") || "");
       message = String(form.get("message") || "");
     }
 
-    if (!name || !email || !message) {
+    if (!name || !email || !phone || !message) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
@@ -39,6 +42,7 @@ export async function POST(req: NextRequest) {
         <p><strong>Name:</strong> ${escapeHtml(name)}</p>
         <p><strong>Email:</strong> ${escapeHtml(email)}</p>
         ${company ? `<p><strong>Company / Property:</strong> ${escapeHtml(company)}</p>` : ""}
+        <p><strong>Phone:</strong> ${escapeHtml(phone)}</p>
         <p><strong>Message:</strong></p>
         <pre style="white-space:pre-wrap;margin:0">${escapeHtml(message)}</pre>
       </div>

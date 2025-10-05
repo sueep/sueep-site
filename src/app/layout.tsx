@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sueep — Commercial Cleaning & Construction Services",
-  description: "Commercial Cleaning services for construction final cleans, janitorial, and painting across PA, NJ, and NY.",
+  title: "Sueep — Commercial Cleaning for Construction & Properties",
+  description: "Commercial cleaning that keeps projects turnover‑ready: final cleans, unit turns, and janitorial programs across PA, NJ, and NY.",
   icons: {
     icon: [
       { url: "/sueepicon.jpeg?v=2", sizes: "32x32" },
@@ -28,13 +28,13 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: "Sueep — Commercial Cleaning & Construction Services",
-    description: "Commercial Cleaning services for construction final cleans, janitorial, and painting across PA, NJ, and NY.",
+    title: "Sueep — Commercial Cleaning for Construction & Properties",
+    description: "Turnover‑ready final cleans, rapid unit turnovers, and janitorial programs across PA, NJ, and NY.",
   },
   twitter: {
     card: "summary",
-    title: "Sueep — Commercial Cleaning & Construction Services",
-    description: "Commercial Cleaning services for construction final cleans, janitorial, and painting across PA, NJ, and NY.",
+    title: "Sueep — Commercial Cleaning for Construction & Properties",
+    description: "Final cleans, unit turns, and janitorial programs delivered on schedule across PA, NJ, and NY.",
   },
 };
 

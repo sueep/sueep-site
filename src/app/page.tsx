@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ContactForm from "./components/ContactForm";
+import PartnersCarousel from "./components/PartnersCarousel";
 
 export default function Home() {
   return (
@@ -29,11 +30,11 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/15 to-black/10" />
         <div className="relative z-10 px-6">
           <h1 className="text-4xl md:text-6xl font-extrabold text-white uppercase tracking-wide text-shadow-md">
-            Commercial Cleaning & Construction Services
+            Commercial Cleaning That Protects Your Schedule and Budget
           </h1>
           <p className="mt-4 text-lg text-white font-medium max-w-2xl mx-auto text-shadow-sm">
-            Trusted by property managers and general contractors for over 20 years.  
-            Delivering large-scale janitorial, final cleans, and painting programs across PA, NJ, and NY.
+            We keep your sites turnover‑ready and common areas inspection‑clean—on time, every time.  
+            Commercial cleaning programs across Greater Philadelphia and surrounding areas.
           </p>
           <a href="#contact" className="mt-6 inline-block px-6 py-3 bg-[#E73C6E] text-white rounded-md font-medium hover:opacity-90">
             Get Started
@@ -45,10 +46,9 @@ export default function Home() {
       <section id="about" className="max-w-7xl mx-auto px-6 py-20 text-center">
         <h2 className="text-2xl md:text-3xl font-bold uppercase">About Sueep</h2>
         <p className="mt-6 text-gray-700 max-w-3xl mx-auto text-lg leading-relaxed">
-          For over two decades, Sueep has partnered with leading property managers and general contractors  
-          to deliver reliable, large-scale cleaning and painting services.  
-          Our teams specialize in construction final cleans, rapid unit turnovers, and daily janitorial programs.  
-          We are a minority-owned business engaged with PDIC, WBEC, and local supplier diversity initiatives.
+          For over two decades, Sueep has helped property managers and general contractors hit deadlines and handoffs.  
+          Our teams run predictable, large‑scale programs: construction final cleans, rapid unit turnovers, and daily janitorial.  
+          We focus on outcomes that matter—clear scopes, tight QC checklists, proactive communication, and crews sized to your schedule.
         </p>
       </section>
 
@@ -124,29 +124,17 @@ export default function Home() {
 
       {/* Partners */}
       <section className="max-w-7xl mx-auto px-6 py-20">
-        <h2 className="text-2xl md:text-3xl font-bold uppercase text-center">Trusted Partners</h2>
-        <div className="mt-12 flex justify-center">
-          <div className="grid md:grid-cols-3 gap-10 items-end justify-items-center w-fit">
-          {[
-            { logo: "/partners/tcg.svg", name: "Tester Construction Group", url: "https://testerconstruction.com/", scale: 2.0 },
-            { logo: "/partners/harkins.svg", name: "Harkins Builders", url: "https://harkinsbuilders.com/", scale: 2.4 },
-            { logo: "/partners/ingerman.svg", name: "Ingerman Construction", url: "https://ingerman.com/", scale: 1.6 },
-          ].map((partner) => (
-            <div key={partner.name} className="text-center flex flex-col">
-              <a href={partner.url} target="_blank" rel="noopener noreferrer" className="block">
-                <div className="mx-auto w-full max-w-[22rem] md:max-w-[26rem] lg:max-w-[30rem] h-40 md:h-48 lg:h-56 flex items-center justify-center overflow-visible">
-                  <img
-                    src={partner.logo}
-                    alt={partner.name}
-                    className="max-h-full w-auto object-contain"
-                    style={{ transform: `scale(${partner.scale})` }}
-                  />
-                </div>
-              </a>
-              <p className="mt-2 text-sm text-gray-600">{partner.name}</p>
-            </div>
-          ))}
-          </div>
+        <h2 className="text-2xl md:text-3xl font-bold uppercase text-center">Companies We Service</h2>
+        <div className="mt-12">
+          <PartnersCarousel
+            intervalMs={2200}
+            partners={[
+              { logo: "/partners/tcg.svg", name: "Tester Construction Group", url: "https://testerconstruction.com/", scale: 2.0 },
+              { logo: "/partners/harkins.svg", name: "Harkins Builders", url: "https://harkinsbuilders.com/", scale: 2.4 },
+              { logo: "/partners/ingerman.svg", name: "Ingerman Construction", url: "https://ingerman.com/", scale: 1.2 },
+              { logo: "/partners/UDR.svg", name: "UDR", url: "https://www.udr.com/", scale: 0.85 },
+            ]}
+          />
         </div>
       </section>
 
