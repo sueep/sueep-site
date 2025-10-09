@@ -164,16 +164,9 @@ export default function CommercialCleaningPage() {
 
       {/* Lead Form */}
       <section className="py-20" aria-labelledby="lead-heading">
-        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-start">
+        <div className="max-w-6xl mx-auto px-6">
           <div>
             <CommercialLeadForm />
-          </div>
-          <div className="md:pl-8">
-            <div className="p-6 bg-gray-50 border border-gray-200 rounded-lg">
-              <h3 className="font-semibold text-lg">Prefer to talk now?</h3>
-              <p className="mt-2 text-gray-700">Email contact@sueep.com</p>
-              <p className="mt-4 text-sm text-gray-500">Serving Greater Philadelphia and nearby markets.</p>
-            </div>
           </div>
         </div>
       </section>
