@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 const TO_EMAIL = process.env.CONTACT_TO_EMAIL || "contact@sueep.com";
 const FROM_EMAIL = process.env.RESEND_FROM || "Sueep Website <noreply@mail.sueep.com>";
+const FORMSUBMIT_ENDPOINT =
+  process.env.FORMSUBMIT_ENDPOINT || "https://formsubmit.co/fc9c50165f29e01095f6f39726348f26";
 
 export async function POST(req: NextRequest) {
   try {
@@ -49,11 +51,34 @@ export async function POST(req: NextRequest) {
     `;
 
     if (!process.env.RESEND_API_KEY) {
-      console.warn("RESEND_API_KEY not set - skipping actual email send. Returning success for dev.");
-      if (isFormPost) {
-        return NextResponse.redirect(new URL("/thank-you?status=skipped", req.url), { status: 303 });
+      // Fallback: forward to FormSubmit so messages still deliver without Resend
+      try {
+        const formPayload = new URLSearchParams();
+        formPayload.set("name", name);
+        formPayload.set("_replyto", email);
+        formPayload.set("company", company);
+        formPayload.set("phone", phone);
+        formPayload.set("message", message);
+        formPayload.set("_subject", `New website inquiry from ${name}`);
+        formPayload.set("_template", "table");
+        formPayload.set("_captcha", "false");
+        formPayload.set("_cc", TO_EMAIL);
+        await fetch(FORMSUBMIT_ENDPOINT, {
+          method: "POST",
+          headers: { "content-type": "application/x-www-form-urlencoded" },
+          body: formPayload.toString(),
+        });
+        if (isFormPost) {
+          return NextResponse.redirect(new URL("/thank-you?status=ok", req.url), { status: 303 });
+        }
+        return NextResponse.json({ ok: true, forwarded: true });
+      } catch (e) {
+        console.error("FormSubmit fallback failed", e);
+        if (isFormPost) {
+          return NextResponse.redirect(new URL("/thank-you?status=error", req.url), { status: 303 });
+        }
+        return NextResponse.json({ error: "Fallback send failed" }, { status: 500 });
       }
-      return NextResponse.json({ ok: true, skipped: true });
     }
 
     const resend = new Resend(process.env.RESEND_API_KEY);
