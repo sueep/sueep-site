@@ -64,6 +64,12 @@ export default function CommercialLeadForm() {
       });
       if (!res.ok) throw new Error("Failed to submit");
       setSubmitState({ status: "success" });
+      try {
+        if (typeof window !== "undefined") {
+          window.location.href = "/thank-you?status=ok";
+          return;
+        }
+      } catch {}
       form.reset();
     } catch (err) {
       setSubmitState({ status: "error", message: "Something went wrong. Please try again." });

@@ -179,9 +179,7 @@ export default function CommercialCleaningPage() {
           </div>
           <div className="mt-4 flex justify-between items-center">
             <p>© {new Date().getFullYear()} Sueep LLC. All rights reserved.</p>
-            <div className="flex gap-6">
-              <a href="/thank-you" className="hover:text-white">Contact</a>
-            </div>
+            <div className="flex gap-6" />
           </div>
         </div>
       </footer>
