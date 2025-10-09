@@ -31,8 +31,8 @@ export default async function ThankYouPage({ searchParams }: { searchParams: Pro
               : "Your message has been received. Our team will get back to you shortly."}
         </p>
         <div className="mt-8 flex gap-4 justify-center">
-          <Link href="/" className="px-6 py-3 bg-[#E73C6E] text-white rounded-md font-medium hover:opacity-90">Back to Home</Link>
-          <a href="#contact" className="px-6 py-3 border border-gray-300 rounded-md font-medium hover:bg-gray-50">Contact Again</a>
+          <Link href="/commercial-cleaning" className="px-6 py-3 bg-[#E73C6E] text-white rounded-md font-medium hover:opacity-90">Back to Commercial Cleaning</Link>
+          <a href="/commercial-cleaning#estimate-form" className="px-6 py-3 border border-gray-300 rounded-md font-medium hover:bg-gray-50">Submit Another Request</a>
         </div>
       </section>
     </main>
