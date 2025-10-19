@@ -111,9 +111,14 @@ export default function Home() {
               { name: "Edwin Giraldo", role: "Manager", img: "/team/edwin.jpg" },
               { name: "David Rodriguez", role: "Project Manager", img: "/team/david.jpg" },
               { name: "Sergio Gomez", role: "Estimator", img: "/team/sergio.jpg" },
+              { name: "Angelina", role: "Administrative Operator", img: "/team/angelina.jpg" },
             ].map((person) => (
-              <div key={person.name} className="text-center">
-                <img src={person.img} alt={person.name} className="mx-auto w-full h-96 object-cover object-top grayscale hover:grayscale-0 transition border border-gray-200" />
+              <div key={person.name} className="text-center overflow-hidden">
+                <img
+                  src={person.img}
+                  alt={person.name}
+                  className={`mx-auto w-full h-96 object-cover ${person.name === "Angelina" ? "object-[50%_25%]" : "object-top"} transition border border-gray-200`}
+                />
                 <p className="mt-4 font-semibold text-[#E73C6E]">{person.name}</p>
                 <p className="text-sm text-gray-600">{person.role}</p>
               </div>
