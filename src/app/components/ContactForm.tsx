@@ -18,7 +18,7 @@ export default function ContactForm() {
   }, []);
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     const form = e.currentTarget;
-    const emailInput = form.querySelector('input[name="email"]') as HTMLInputElement | null;
+    const emailInput = form.querySelector('input[name="_replyto"]') as HTMLInputElement | null;
     const phoneInput = form.querySelector('input[name="phone"]') as HTMLInputElement | null;
     const nextErrors: { email?: string; phone?: string } = {};
     const email = (emailInput?.value || "").trim();
@@ -41,7 +41,7 @@ export default function ContactForm() {
       <form
         className="mt-6 space-y-4"
         method="post"
-        action="/api/contact"
+        action="https://formsubmit.co/fc9c50165f29e01095f6f39726348f26"
         autoComplete="off"
         onSubmit={handleSubmit}
       >
@@ -54,7 +54,7 @@ export default function ContactForm() {
           <label htmlFor="email" className="sr-only">Email</label>
           <input
             id="email"
-            name="email"
+            name="_replyto"
             type="email"
             placeholder="you@company.com *"
             className="mt-1 w-full rounded-md px-4 py-3 text-base bg-white text-gray-900 placeholder-gray-500 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#E73C6E]/50 focus:border-[#E73C6E]"
