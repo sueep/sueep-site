@@ -62,16 +62,13 @@ export default function CommercialLeadForm() {
         onSubmit={onSubmit}
         className="mt-6 grid grid-cols-1 gap-4"
         method="post"
-        action="https://formsubmit.co/fc9c50165f29e01095f6f39726348f26"
+        action="/api/contact"
         autoComplete="off"
       >
         <input type="hidden" name="_next" value={redirectUrl} />
-        <input type="hidden" name="_cc" value="edwin@sueep.com" />
         {/* Honeypot */}
         <input type="text" name="_honey" style={{ display: "none" }} tabIndex={-1} autoComplete="off" />
         <input type="hidden" name="_subject" value="New website inquiry from sueep.com" />
-        <input type="hidden" name="_template" value="table" />
-        <input type="hidden" name="_captcha" value="false" />
         <input
           name="name"
           type="text"
@@ -87,7 +84,7 @@ export default function CommercialLeadForm() {
         />
         <div>
           <input
-            name="_replyto"
+            name="email"
             type="email"
             placeholder="you@company.com *"
             className="w-full rounded-md px-4 py-3 text-base bg-white text-gray-900 placeholder-gray-500 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#E73C6E]/50 focus:border-[#E73C6E]"

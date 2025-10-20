@@ -12,25 +12,36 @@ export async function POST(req: NextRequest) {
       contentType.includes("application/x-www-form-urlencoded") ||
       contentType.includes("multipart/form-data");
     let name = "";
-    let email = "";
+    let email = ""; // accepts either 'email' or '_replyto' from forms
     let company = "";
     let phone = "";
     let message = "";
+    let honey = ""; // spam honeypot
 
     if (contentType.includes("application/json")) {
       const body = await req.json();
       name = String(body?.name || "");
-      email = String(body?.email || "");
+      email = String(body?.email || body?._replyto || "");
       company = String(body?.company || "");
       phone = String(body?.phone || "");
       message = String(body?.message || "");
+      honey = String(body?._honey || "");
     } else if (contentType.includes("application/x-www-form-urlencoded") || contentType.includes("multipart/form-data")) {
       const form = await req.formData();
       name = String(form.get("name") || "");
-      email = String(form.get("email") || "");
+      email = String(form.get("email") || form.get("_replyto") || "");
       company = String(form.get("company") || "");
       phone = String(form.get("phone") || "");
       message = String(form.get("message") || "");
+      honey = String(form.get("_honey") || "");
+    }
+
+    // Basic honeypot spam check
+    if (honey) {
+      if (isFormPost) {
+        return NextResponse.redirect(new URL("/thank-you?status=ok", req.url), { status: 303 });
+      }
+      return NextResponse.json({ ok: true, skipped: true });
     }
 
     if (!name || !email || !phone || !message) {

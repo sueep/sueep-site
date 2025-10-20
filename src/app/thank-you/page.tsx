@@ -1,12 +1,10 @@
+"use client";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
-export default function ThankYouPage({
-  searchParams,
-}: {
-  searchParams?: { [key: string]: string | string[] | undefined };
-}) {
-  const rawStatus = searchParams?.status;
-  const status = Array.isArray(rawStatus) ? rawStatus[0] : rawStatus;
+export default function ThankYouPage() {
+  const sp = useSearchParams();
+  const status = sp.get("status") || undefined;
   const isError = status === "error";
   const isSkipped = status === "skipped";
   return (
