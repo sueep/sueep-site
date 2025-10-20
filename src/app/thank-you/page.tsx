@@ -1,11 +1,12 @@
-"use client";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
 
-function ThankYouContent() {
-  const sp = useSearchParams();
-  const status = sp.get("status") || undefined;
+export default function ThankYouPage({
+  searchParams,
+}: {
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) {
+  const raw = searchParams?.status;
+  const status = Array.isArray(raw) ? raw[0] : raw;
   const isError = status === "error";
   const isSkipped = status === "skipped";
   return (
@@ -38,14 +39,6 @@ function ThankYouContent() {
         </div>
       </section>
     </main>
-  );
-}
-
-export default function ThankYouPage() {
-  return (
-    <Suspense fallback={<main className="min-h-[70vh] flex items-center justify-center"><p className="text-gray-500">Loading…</p></main>}>
-      <ThankYouContent />
-    </Suspense>
   );
 }
 
