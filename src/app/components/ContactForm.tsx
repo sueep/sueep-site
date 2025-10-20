@@ -6,14 +6,14 @@ export default function ContactForm() {
   const [mounted, setMounted] = useState(false);
   const [redirectUrl, setRedirectUrl] = useState(() =>
     typeof window !== "undefined"
-      ? `${window.location.origin}/thank-you?status=ok`
-      : "/thank-you?status=ok"
+      ? `${window.location.origin}/thank-you`
+      : "/thank-you"
   );
   const [errors, setErrors] = useState<{ email?: string; phone?: string }>({});
   useEffect(() => {
     setMounted(true);
     if (typeof window !== "undefined") {
-      setRedirectUrl(`${window.location.origin}/thank-you?status=ok`);
+      setRedirectUrl(`${window.location.origin}/thank-you`);
     }
   }, []);
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {

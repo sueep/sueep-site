@@ -13,8 +13,8 @@ export default function CommercialLeadForm() {
   const [submitState, setSubmitState] = useState<SubmitState>({ status: "idle" });
   const [redirectUrl, setRedirectUrl] = useState(() =>
     typeof window !== "undefined"
-      ? `${window.location.origin}/thank-you?status=ok`
-      : "/thank-you?status=ok"
+      ? `${window.location.origin}/thank-you`
+      : "/thank-you"
   );
   const [errors, setErrors] = useState<{ email?: string; phone?: string }>();
 
