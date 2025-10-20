@@ -1,8 +1,9 @@
 "use client";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function ThankYouPage() {
+function ThankYouContent() {
   const sp = useSearchParams();
   const status = sp.get("status") || undefined;
   const isError = status === "error";
@@ -37,6 +38,14 @@ export default function ThankYouPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+export default function ThankYouPage() {
+  return (
+    <Suspense fallback={<main className="min-h-[70vh] flex items-center justify-center"><p className="text-gray-500">Loading…</p></main>}>
+      <ThankYouContent />
+    </Suspense>
   );
 }
 
