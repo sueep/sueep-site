@@ -35,7 +35,7 @@ export default function CommercialLeadForm() {
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     const form = e.currentTarget;
-    const emailInput = form.querySelector('input[name="_replyto"]') as HTMLInputElement | null;
+    const emailInput = form.querySelector('input[name="email"]') as HTMLInputElement | null;
     const phoneInput = form.querySelector('input[name="phone"]') as HTMLInputElement | null;
     const nextErrors: { email?: string; phone?: string } = {};
     const email = (emailInput?.value || "").trim();
