@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 
 export default function ContactForm() {
   const [mounted, setMounted] = useState(false);
-  const [redirectUrl, setRedirectUrl] = useState("/thank-you?status=ok");
+  const [redirectUrl, setRedirectUrl] = useState(() =>
+    typeof window !== "undefined"
+      ? `${window.location.origin}/thank-you?status=ok`
+      : "/thank-you?status=ok"
+  );
   const [errors, setErrors] = useState<{ email?: string; phone?: string }>({});
   useEffect(() => {
     setMounted(true);

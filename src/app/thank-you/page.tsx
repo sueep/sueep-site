@@ -1,8 +1,11 @@
 import Link from "next/link";
 
-export default async function ThankYouPage({ searchParams }: { searchParams: Promise<Record<string, unknown>> }) {
-  const sp = await searchParams;
-  const rawStatus = (sp?.status as string | string[] | undefined);
+export default function ThankYouPage({
+  searchParams,
+}: {
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) {
+  const rawStatus = searchParams?.status;
   const status = Array.isArray(rawStatus) ? rawStatus[0] : rawStatus;
   const isError = status === "error";
   const isSkipped = status === "skipped";
