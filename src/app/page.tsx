@@ -36,7 +36,10 @@ export default function Home() {
             We keep your sites turnover‑ready and common areas inspection‑clean—on time, every time.  
             Commercial cleaning programs across Greater Philadelphia and surrounding areas.
           </p>
-          <a href="#contact" className="mt-6 inline-block px-6 py-3 bg-[#E73C6E] text-white rounded-md font-medium hover:opacity-90">
+          <a
+            href="#contact"
+            className="mt-6 inline-block px-6 py-3 bg-[#E73C6E] text-white rounded-md font-medium hover:opacity-90"
+          >
             Get Started
           </a>
         </div>
@@ -107,11 +110,12 @@ export default function Home() {
           <div className="mt-12 grid md:grid-cols-4 gap-8">
             {[
               { name: "Martha Rios", role: "Cleaning Manager", img: "/team/martha.jpg" },
-              { name: "Oscar Giraldo", role: "Painting Manager", img: "/team/oscar.jpg" },
+              { name: "Oscar Giraldo", role: "Cleaning Manager", img: "/team/oscar.jpg" },
               { name: "Edwin Giraldo", role: "Manager", img: "/team/edwin.jpg" },
               { name: "David Rodriguez", role: "Project Manager", img: "/team/david.jpg" },
               { name: "Sergio Gomez", role: "Estimator", img: "/team/sergio.jpg" },
               { name: "Angelina Fulton", role: "Administrative Operator", img: "/team/angelina.jpg" },
+              { name: "Jarrod DesJardin", role: "HR Business Partner", img: "/team/jarrod-desjardin.jpg?v=4" },
             ].map((person) => (
               <div key={person.name} className="text-center overflow-hidden">
                 <img
