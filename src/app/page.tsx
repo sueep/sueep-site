@@ -75,10 +75,44 @@ export default function Home() {
               },
             ].map((service) => (
               <div key={service.title} className="p-6 border border-gray-200 bg-white hover:shadow-md transition">
-                <h3 className="font-semibold text-lg">{service.title}</h3>
+                <h3 className="font-semibold text-lg">
+                  {service.title === "Commercial Painting" ? (
+                    <a href="#painting" className="hover:text-[#E73C6E]">{service.title}</a>
+                  ) : (
+                    service.title
+                  )}
+                </h3>
                 <p className="mt-3 text-sm text-gray-600">{service.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Painting (in-page section) */}
+      <section id="painting" className="py-20">
+        <div className="max-w-7xl mx-auto px-6">
+          <h2 className="text-2xl md:text-3xl font-bold uppercase text-center">Commercial Painting</h2>
+          <p className="mt-6 text-gray-700 max-w-3xl mx-auto text-lg leading-relaxed text-center">
+            Turnover painting, common areas, and renovation programs—crews sized to your deadlines with
+            consistent prep standards and predictable finishes.
+          </p>
+          <div className="mt-12 grid md:grid-cols-3 gap-8">
+            {[
+              { title: "Turnover Painting", desc: "Efficient unit turns with consistent prep and finish standards." },
+              { title: "Common Areas", desc: "Lobbies, corridors, and amenities—night crews available." },
+              { title: "Renovations & New Builds", desc: "Coordination with GC schedules and property teams." },
+            ].map((item) => (
+              <div key={item.title} className="p-6 border border-gray-200 bg-white">
+                <h3 className="font-semibold text-lg">{item.title}</h3>
+                <p className="mt-3 text-sm text-gray-600">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-10 text-center">
+            <a href="#contact" className="inline-block px-6 py-3 bg-[#E73C6E] text-white rounded-md font-medium hover:opacity-90">
+              Request a Painting Estimate
+            </a>
           </div>
         </div>
       </section>
