@@ -59,69 +59,30 @@ export default function Home() {
       <section id="services" className="bg-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-2xl md:text-3xl font-bold uppercase text-center">Services</h2>
-          <div className="mt-12 grid md:grid-cols-2 gap-8">
-            {/* Cleaning Group */}
-            <div className="p-6 border border-gray-200 bg-white hover:shadow-md transition">
-              <h3 className="text-xl font-semibold">Cleaning</h3>
-              <ul className="mt-4 space-y-3 text-sm text-gray-700">
-                <li>
-                  <span className="font-medium">Post‑Construction Cleaning</span> — Final cleans and debris removal aligned with GC schedules and punch lists.
-                </li>
-                <li>
-                  <span className="font-medium">Janitorial Services</span> — Daily lobby, corridor, and amenity cleaning with QA checklists and night crews.
-                </li>
-              </ul>
-              <div className="mt-6">
-                <a href="#contact" className="inline-block px-4 py-2 bg-black text-white rounded-md text-sm hover:opacity-90">
-                  Request Cleaning Quote
-                </a>
-              </div>
-            </div>
-            {/* Painting Group */}
-            <div className="p-6 border border-gray-200 bg-white hover:shadow-md transition">
-              <h3 className="text-xl font-semibold">Painting</h3>
-              <ul className="mt-4 space-y-3 text-sm text-gray-700">
-                <li>
-                  <a href="#painting" className="font-medium text-[#E73C6E] hover:underline">Commercial Painting</a> — Common areas, renovations, and new builds with predictable finishes.
-                </li>
-                <li>
-                  <a href="#painting" className="font-medium text-[#E73C6E] hover:underline">Residential Painting</a> — Unit turns and occupied refreshes with consistent prep and clean edges.
-                </li>
-              </ul>
-              <div className="mt-6">
-                <a href="#painting" className="inline-block px-4 py-2 bg-[#E73C6E] text-white rounded-md text-sm hover:opacity-90">
-                  View Painting Capabilities
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Painting (in-page section) */}
-      <section id="painting" className="py-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-bold uppercase text-center">Painting — Residential & Commercial</h2>
-          <p className="mt-6 text-gray-700 max-w-3xl mx-auto text-lg leading-relaxed text-center">
-            From unit turns and occupied refreshes to common‑area programs and new builds—our crews scale to your
-            deadlines with consistent prep standards and predictable finishes.
-          </p>
-          <div className="mt-12 grid md:grid-cols-3 gap-8">
+          <div className="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { title: "Residential (Turns & Occupied)", desc: "Unit turns, touch‑ups, and refreshes with clean edges and proper masking." },
-              { title: "Commercial Common Areas", desc: "Lobbies, corridors, and amenities—night crews available." },
-              { title: "Renovations & New Builds", desc: "Coordination with GC schedules; consistent prep, primer, and finish specs." },
-            ].map((item) => (
-              <div key={item.title} className="p-6 border border-gray-200 bg-white">
-                <h3 className="font-semibold text-lg">{item.title}</h3>
-                <p className="mt-3 text-sm text-gray-600">{item.desc}</p>
+              {
+                title: "Post‑Construction Cleaning",
+                desc: "Final cleans and debris removal aligned with GC schedules and punch lists.",
+              },
+              {
+                title: "Janitorial Services",
+                desc: "Daily lobby, corridor, and amenity cleaning with QA checklists and night crews.",
+              },
+              {
+                title: "Commercial Painting",
+                desc: "Common areas, renovations, and new builds with predictable finishes.",
+              },
+              {
+                title: "Residential Painting",
+                desc: "Unit turns and occupied refreshes with consistent prep and clean edges.",
+              },
+            ].map((service) => (
+              <div key={service.title} className="p-6 border border-gray-200 bg-white hover:shadow-md transition">
+                <h3 className="font-semibold text-lg">{service.title}</h3>
+                <p className="mt-3 text-sm text-gray-600">{service.desc}</p>
               </div>
             ))}
-          </div>
-          <div className="mt-10 text-center">
-            <a href="#contact" className="inline-block px-6 py-3 bg-[#E73C6E] text-white rounded-md font-medium hover:opacity-90">
-              Request a Painting Estimate
-            </a>
           </div>
         </div>
       </section>
