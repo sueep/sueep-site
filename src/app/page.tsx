@@ -59,24 +59,28 @@ export default function Home() {
       <section id="services" className="bg-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-2xl md:text-3xl font-bold uppercase text-center">Services</h2>
-          <div className="mt-12 grid md:grid-cols-3 gap-8">
+          <div className="mt-12 grid md:grid-cols-3 lg:grid-cols-4 gap-8">
             {[
               {
-                title: "Commercial Cleaning",
-                desc: "Final cleans, debris removal, and turnover support aligned with GC schedules.",
-              },
-              {
-                title: "Commercial Painting",
-                desc: "Turnover painting with strict prep and primer standards for consistent finishes.",
+                title: "Post‑Construction Cleaning",
+                desc: "Final cleans and debris removal aligned with GC schedules and punch lists.",
               },
               {
                 title: "Janitorial Services",
                 desc: "Daily lobby, corridor, and amenity cleaning with QA checklists and night crews.",
               },
+              {
+                title: "Commercial Painting",
+                desc: "Common areas, renovations, and new builds with predictable finishes.",
+              },
+              {
+                title: "Residential Painting",
+                desc: "Unit turns and occupied refreshes with consistent prep and clean edges.",
+              },
             ].map((service) => (
               <div key={service.title} className="p-6 border border-gray-200 bg-white hover:shadow-md transition">
                 <h3 className="font-semibold text-lg">
-                  {service.title === "Commercial Painting" ? (
+                  {service.title.includes("Painting") ? (
                     <a href="#painting" className="hover:text-[#E73C6E]">{service.title}</a>
                   ) : (
                     service.title
@@ -92,16 +96,16 @@ export default function Home() {
       {/* Painting (in-page section) */}
       <section id="painting" className="py-20">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-bold uppercase text-center">Commercial Painting</h2>
+          <h2 className="text-2xl md:text-3xl font-bold uppercase text-center">Painting — Residential & Commercial</h2>
           <p className="mt-6 text-gray-700 max-w-3xl mx-auto text-lg leading-relaxed text-center">
-            Turnover painting, common areas, and renovation programs—crews sized to your deadlines with
-            consistent prep standards and predictable finishes.
+            From unit turns and occupied refreshes to common‑area programs and new builds—our crews scale to your
+            deadlines with consistent prep standards and predictable finishes.
           </p>
           <div className="mt-12 grid md:grid-cols-3 gap-8">
             {[
-              { title: "Turnover Painting", desc: "Efficient unit turns with consistent prep and finish standards." },
-              { title: "Common Areas", desc: "Lobbies, corridors, and amenities—night crews available." },
-              { title: "Renovations & New Builds", desc: "Coordination with GC schedules and property teams." },
+              { title: "Residential (Turns & Occupied)", desc: "Unit turns, touch‑ups, and refreshes with clean edges and proper masking." },
+              { title: "Commercial Common Areas", desc: "Lobbies, corridors, and amenities—night crews available." },
+              { title: "Renovations & New Builds", desc: "Coordination with GC schedules; consistent prep, primer, and finish specs." },
             ].map((item) => (
               <div key={item.title} className="p-6 border border-gray-200 bg-white">
                 <h3 className="font-semibold text-lg">{item.title}</h3>
