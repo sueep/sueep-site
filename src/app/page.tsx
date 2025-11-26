@@ -30,7 +30,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/15 to-black/10" />
         <div className="relative z-10 px-6">
           <h1 className="text-4xl md:text-6xl font-extrabold text-white uppercase tracking-wide text-shadow-md">
-            Cleaning & Painting That Protect Your Schedule and Budget
+            Cleaning & Painting That Protects Your Schedule and Budget
           </h1>
           <p className="mt-4 text-lg text-white font-medium max-w-2xl mx-auto text-shadow-sm">
             Post‑construction and janitorial cleaning, plus residential and commercial painting—crews sized to your deadlines across Greater Philadelphia.
