@@ -106,7 +106,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Team section intentionally omitted per request */}
+      {/* Team */}
+      <section id="team" className="bg-gray-50 py-20">
+        <div className="max-w-7xl mx-auto px-6">
+          <h2 className="text-2xl md:text-3xl font-bold uppercase text-center">Our Team</h2>
+          <div className="mt-12">
+            <img
+              src="/teamexported.jpeg"
+              alt="Sueep team"
+              className="mx-auto w-full max-w-6xl h-auto object-contain border border-gray-200"
+            />
+          </div>
+        </div>
+      </section>
 
       {/* Partners */}
       <section className="max-w-7xl mx-auto px-6 py-20">
