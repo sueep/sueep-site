@@ -112,7 +112,7 @@ export default function Home() {
           <h2 className="text-2xl md:text-3xl font-bold uppercase text-center">Our Team</h2>
           <div className="mt-12">
             <img
-              src="/teamexported.jpeg"
+              src="/teamexported.jpg"
               alt="Sueep team"
               className="mx-auto w-full max-w-6xl h-auto object-contain border border-gray-200"
             />
