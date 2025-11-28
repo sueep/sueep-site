@@ -26,7 +26,7 @@ export default function Home() {
 
       {/* Hero */}
       <section className="relative h-[80vh] flex items-center justify-center text-center">
-        <img src="/hero.jpg" alt="Commercial project" className="absolute inset-0 w-full h-full object-cover" />
+        <img src="/teamexported.jpg" alt="Sueep team at project site" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/15 to-black/10" />
         <div className="relative z-10 px-6">
           <h1 className="text-4xl md:text-6xl font-extrabold text-white uppercase tracking-wide text-shadow-md">
@@ -110,7 +110,7 @@ export default function Home() {
       <section id="team" className="bg-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-2xl md:text-3xl font-bold uppercase text-center">Admin Team</h2>
-          <div className="mt-12 grid md:grid-cols-4 gap-8">
+          <div className="mt-12 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {[
               { name: "Martha Rios", role: "Cleaning Manager", img: "/team/martha.jpg" },
               { name: "Oscar Giraldo", role: "Cleaning Manager", img: "/team/oscar.jpg" },
@@ -124,7 +124,7 @@ export default function Home() {
                 <img
                   src={person.img}
                   alt={person.name}
-                  className={`mx-auto w-full h-96 object-cover ${person.img === "/team/angelina.jpg" ? "object-[50%_25%]" : "object-top"} transition border border-gray-200`}
+                  className={`mx-auto w-full h-64 sm:h-72 md:h-80 lg:h-96 object-cover ${person.img === "/team/angelina.jpg" ? "object-[50%_25%]" : "object-center"} transition border border-gray-200`}
                 />
                 <p className="mt-4 font-semibold text-[#E73C6E]">{person.name}</p>
                 <p className="text-sm text-gray-600">{person.role}</p>
