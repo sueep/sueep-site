@@ -109,13 +109,27 @@ export default function Home() {
       {/* Team */}
       <section id="team" className="bg-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-bold uppercase text-center">Our Team</h2>
-          <div className="mt-12">
-            <img
-              src="/teamexported.jpg"
-              alt="Sueep team"
-              className="mx-auto w-full max-w-6xl h-auto object-contain border border-gray-200"
-            />
+          <h2 className="text-2xl md:text-3xl font-bold uppercase text-center">Admin Team</h2>
+          <div className="mt-12 grid md:grid-cols-4 gap-8">
+            {[
+              { name: "Martha Rios", role: "Cleaning Manager", img: "/team/martha.jpg" },
+              { name: "Oscar Giraldo", role: "Cleaning Manager", img: "/team/oscar.jpg" },
+              { name: "Edwin Giraldo", role: "Manager", img: "/team/edwin.jpg" },
+              { name: "David Rodriguez", role: "Project Manager", img: "/team/david.jpg" },
+              { name: "Sergio Gomez", role: "Estimator", img: "/team/sergio.jpg" },
+              { name: "Angelina Fulton", role: "Administrative Operator", img: "/team/angelina.jpg" },
+              { name: "Jarrod DesJardin", role: "HR Business Partner", img: "/team/jarrod-desjardin.jpg?v=4" },
+            ].map((person) => (
+              <div key={person.name} className="text-center overflow-hidden">
+                <img
+                  src={person.img}
+                  alt={person.name}
+                  className={`mx-auto w-full h-96 object-cover ${person.img === "/team/angelina.jpg" ? "object-[50%_25%]" : "object-top"} transition border border-gray-200`}
+                />
+                <p className="mt-4 font-semibold text-[#E73C6E]">{person.name}</p>
+                <p className="text-sm text-gray-600">{person.role}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
