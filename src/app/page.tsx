@@ -26,7 +26,7 @@ export default function Home() {
 
       {/* Hero */}
       <section className="relative h-[80vh] flex items-center justify-center text-center">
-        <img src="/teamexported.jpg" className="absolute inset-0 w-full h-full object-cover" alt="Sueep team at project site" />
+        <img src="/hero.jpg" className="absolute inset-0 w-full h-full object-cover" alt="Sueep team at project site" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/15 to-black/10" />
         <div className="relative z-10 px-6">
           <h1 className="text-4xl md:text-6xl font-extrabold text-white uppercase tracking-wide text-shadow-md">
@@ -115,7 +115,6 @@ export default function Home() {
               { name: "David Rodriguez", role: "Project Manager", img: "/team/david.jpg" },
               { name: "Sergio Gomez", role: "Estimator", img: "/team/sergio.jpg" },
               { name: "Angelina Fulton", role: "Administrative Operator", img: "/team/angelina.jpg" },
-              { name: "Jarrod DesJardin", role: "HR Business Partner", img: "/team/jarrod.jpeg" },
             ].map((person) => (
               <div key={person.name} className="text-center">
                 <img src={person.img} alt={person.name} className="mx-auto w-full h-96 object-cover object-top transition border border-gray-200" />
