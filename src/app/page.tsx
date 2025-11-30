@@ -35,10 +35,7 @@ export default function Home() {
           <p className="mt-4 text-lg text-white font-medium max-w-2xl mx-auto text-shadow-sm">
             Post-construction and janitorial cleaning, plus residential and commercial painting—crews sized to your deadlines.
           </p>
-          <a
-            href="#contact"
-            className="mt-6 inline-block px-6 py-3 bg-[#E73C6E] text-white rounded-md font-medium hover:opacity-90"
-          >
+          <a href="#contact" className="mt-6 inline-block px-6 py-3 bg-[#E73C6E] text-white rounded-md font-medium hover:opacity-90">
             Get Started
           </a>
         </div>
@@ -198,5 +195,6 @@ export default function Home() {
     </main>
   );
 }
+
 
 
