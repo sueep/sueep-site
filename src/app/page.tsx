@@ -26,14 +26,14 @@ export default function Home() {
 
       {/* Hero */}
       <section className="relative h-[80vh] flex items-center justify-center text-center">
-        <img src="/teamexported.jpg" alt="Sueep team at project site" className="absolute inset-0 w-full h-full object-cover" />
+        <img src="/hero.jpg" className="absolute inset-0 w-full h-full object-cover" alt="Sueep team at project site" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/15 to-black/10" />
         <div className="relative z-10 px-6">
           <h1 className="text-4xl md:text-6xl font-extrabold text-white uppercase tracking-wide text-shadow-md">
             Cleaning & Painting That Protects Your Schedule and Budget
           </h1>
           <p className="mt-4 text-lg text-white font-medium max-w-2xl mx-auto text-shadow-sm">
-            Post‑construction and janitorial cleaning, plus residential and commercial painting—crews sized to your deadlines across Greater Philadelphia.
+            Post-construction and janitorial cleaning, plus residential and commercial painting—crews sized to your deadlines.
           </p>
           <a
             href="#contact"
@@ -58,19 +58,19 @@ export default function Home() {
       <section id="services" className="bg-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-2xl md:text-3xl font-bold uppercase text-center">Services</h2>
-          <div className="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
             {[
               {
-                title: "Post‑Construction Cleaning",
-                desc: "Final cleans and debris removal aligned with GC schedules and punch lists.",
+                title: "Post-Construction Cleaning",
+                desc: "Final cleans, debris removal, and turnover support aligned with GC schedules.",
               },
               {
-                title: "Janitorial Services",
+                title: "Janitorial Cleaning",
                 desc: "Daily lobby, corridor, and amenity cleaning with QA checklists and night crews.",
               },
               {
                 title: "Commercial Painting",
-                desc: "Common areas, renovations, and new builds with predictable finishes.",
+                desc: "Turnover painting with strict prep and primer standards for consistent finishes.",
               },
               {
                 title: "Residential Painting",
@@ -109,23 +109,19 @@ export default function Home() {
       {/* Team */}
       <section id="team" className="bg-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-bold uppercase text-center">Admin Team</h2>
-          <div className="mt-12 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          <h2 className="text-2xl md:text-3xl font-bold uppercase text-center">Our Team</h2>
+          <div className="mt-12 grid md:grid-cols-4 gap-8">
             {[
               { name: "Martha Rios", role: "Cleaning Manager", img: "/team/martha.jpg" },
-              { name: "Oscar Giraldo", role: "Cleaning Manager", img: "/team/oscar.jpg" },
+              { name: "Oscar Giraldo", role: "Painting Manager", img: "/team/oscar.jpg" },
               { name: "Edwin Giraldo", role: "Manager", img: "/team/edwin.jpg" },
               { name: "David Rodriguez", role: "Project Manager", img: "/team/david.jpg" },
               { name: "Sergio Gomez", role: "Estimator", img: "/team/sergio.jpg" },
               { name: "Angelina Fulton", role: "Administrative Operator", img: "/team/angelina.jpg" },
-              { name: "Jarrod DesJardin", role: "HR Business Partner", img: "/team/jarrod-desjardin.jpg?v=4" },
+              { name: "Jarrod DesJardin", role: "HR Business Partner", img: "/team/jarrod.jpeg" },
             ].map((person) => (
-              <div key={person.name} className="text-center overflow-hidden">
-                <img
-                  src={person.img}
-                  alt={person.name}
-                  className={`mx-auto w-full h-64 sm:h-72 md:h-80 lg:h-96 object-cover ${person.img === "/team/angelina.jpg" ? "object-[50%_25%]" : "object-center"} transition border border-gray-200`}
-                />
+              <div key={person.name} className="text-center">
+                <img src={person.img} alt={person.name} className="mx-auto w-full h-96 object-cover object-top transition border border-gray-200" />
                 <p className="mt-4 font-semibold text-[#E73C6E]">{person.name}</p>
                 <p className="text-sm text-gray-600">{person.role}</p>
               </div>
