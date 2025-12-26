@@ -56,6 +56,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-53QSN796');`}
         </Script>
         {/* End Google Tag Manager */}
+        {/* HubSpot Chat init - ensure immediate load in dev */}
+        <Script id="hs-init" strategy="beforeInteractive">
+          {`window.hsConversationsSettings = window.hsConversationsSettings || {};
+window.hsConversationsSettings.loadImmediately = true;`}
+        </Script>
+        {/* HubSpot Chat */}
+        <Script
+          id="hs-script-loader"
+          strategy="afterInteractive"
+          src="https://js.hs-scripts.com/6686745.js"
+        />
+        {/* End HubSpot Chat */}
       </head>
       <body
         suppressHydrationWarning

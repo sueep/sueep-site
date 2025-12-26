@@ -103,26 +103,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Team */}
-      <section id="team" className="bg-gray-50 py-20">
+      {/* Our Story */}
+      <section id="story" className="bg-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-bold uppercase text-center">Our Team</h2>
-          <div className="mt-12 grid md:grid-cols-4 gap-8">
-            {[
-              { name: "Martha Rios", role: "Cleaning Manager", img: "/team/martha.jpg" },
-              { name: "Oscar Giraldo", role: "Painting Manager", img: "/team/oscar.jpg" },
-              { name: "Edwin Giraldo", role: "Manager", img: "/team/edwin.jpg" },
-              { name: "David Rodriguez", role: "Project Manager", img: "/team/david.jpg" },
-              { name: "Sergio Gomez", role: "Estimator", img: "/team/sergio.jpg" },
-              { name: "Angelina Fulton", role: "Administrative Operator", img: "/team/angelina.jpg" },
-            ].map((person) => (
-              <div key={person.name} className="text-center">
-                <img src={person.img} alt={person.name} className="mx-auto w-full h-96 object-cover object-top transition border border-gray-200" />
-                <p className="mt-4 font-semibold text-[#E73C6E]">{person.name}</p>
-                <p className="text-sm text-gray-600">{person.role}</p>
-              </div>
-            ))}
-          </div>
+          <h2 className="text-2xl md:text-3xl font-bold uppercase text-center">Our Story</h2>
+          <p className="mt-12 text-gray-700 text-lg leading-relaxed max-w-3xl mx-auto">
+            Sueep started in 2018 as a family business in the residential cleaning space. Over time, it evolved to serve commercial clients and additional services. Sueep maintains its family approach investing in supervision, clear scopes, and quality control so projects hand off smoothly and portfolios stay consistent.
+          </p>
         </div>
       </section>
 
