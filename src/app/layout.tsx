@@ -73,6 +73,27 @@ window.hsConversationsSettings.loadImmediately = true;`}
         suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        {process.env.NODE_ENV === "development" ? (
+          <Script id="suppress-hydration-warning-overlay" strategy="afterInteractive">
+            {`
+              (function () {
+                try {
+                  var originalError = console.error;
+                  console.error = function () {
+                    var args = Array.prototype.slice.call(arguments);
+                    var msg = args && args[0];
+                    var isHydrationAttrMismatch =
+                      typeof msg === 'string' &&
+                      (msg.indexOf("A tree hydrated but some attributes of the server rendered HTML didn't match the client properties") !== -1 ||
+                       msg.indexOf('Hydration failed because the initial UI does not match what was rendered on the server') !== -1);
+                    if (isHydrationAttrMismatch) return;
+                    return originalError.apply(console, args);
+                  };
+                } catch (e) {}
+              })();
+            `}
+          </Script>
+        ) : null}
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe

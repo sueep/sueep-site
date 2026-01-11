@@ -27,13 +27,13 @@ export default function CommercialCleaningPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/0" />
         <div className="relative z-10 max-w-6xl mx-auto px-6 py-24">
           <h1 className="text-4xl md:text-6xl font-extrabold text-white max-w-4xl">
-            Philadelphia’s Trusted Partner for Ongoing Commercial Cleaning
+            Philadelphia’s Trusted Partner for Painting and Cleaning
           </h1>
           <p className="mt-4 text-lg md:text-xl text-white/95 max-w-3xl">
             We provide reliable janitorial staffing for large buildings, schools, medical facilities, and offices.
           </p>
           <a href="#estimate-form" className="mt-8 inline-block px-6 py-3 bg-[#E73C6E] text-white rounded-md font-medium hover:opacity-90">
-            Request a Commercial Cleaning Estimate
+            Request a Painting and Cleaning Estimate
           </a>
           <p className="mt-3 text-sm text-white/80 italic">Minimum 5 days/week service • 10,000+ sq ft buildings</p>
         </div>
