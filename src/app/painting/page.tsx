@@ -206,7 +206,7 @@ export default function PaintingPage() {
               action="https://formsubmit.co/contact@sueep.com"
               autoComplete="off"
             >
-              <input type="hidden" name="_next" value="/thank-you" />
+              <input type="hidden" name="_next" value="https://sueep.com/thank-you" />
               <input type="text" name="_honey" style={{ display: "none" }} tabIndex={-1} autoComplete="off" />
               <input type="hidden" name="_subject" value="New residential painting inquiry from sueep.com" />
               <input type="hidden" name="_captcha" value="false" />
