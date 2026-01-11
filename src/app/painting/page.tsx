@@ -203,10 +203,10 @@ export default function PaintingPage() {
             <form
               className="mt-6 grid grid-cols-1 gap-4"
               method="post"
-              action="https://formsubmit.co/contact@sueep.com"
+              action="/api/contact"
               autoComplete="off"
             >
-              <input type="hidden" name="_next" value="https://sueep.com/thank-you" />
+              {/* Redirect handled by /api/contact; keep honeypot and subject for fallback */}
               <input type="text" name="_honey" style={{ display: "none" }} tabIndex={-1} autoComplete="off" />
               <input type="hidden" name="_subject" value="New residential painting inquiry from sueep.com" />
               <input type="hidden" name="_captcha" value="false" />
