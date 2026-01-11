@@ -275,7 +275,12 @@ export default function PaintingPage() {
               >
                 Submit Request
               </button>
-              <p className="text-sm text-gray-600">Prefer to talk? Call <strong>(267) 317-8268</strong></p>
+              <p className="text-sm text-gray-600">
+                Prefer to talk? Call{" "}
+                <a href="tel:+12673178268" className="font-semibold underline decoration-transparent hover:decoration-inherit">
+                  (267) 317-8268
+                </a>
+              </p>
             </form>
           </div>
           <div>
