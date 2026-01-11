@@ -203,12 +203,14 @@ export default function PaintingPage() {
             <form
               className="mt-6 grid grid-cols-1 gap-4"
               method="post"
-              action="https://formsubmit.co/fc9c50165f29e01095f6f39726348f26"
+              action="https://formsubmit.co/contact@sueep.com"
               autoComplete="off"
             >
               <input type="hidden" name="_next" value="/thank-you" />
               <input type="text" name="_honey" style={{ display: "none" }} tabIndex={-1} autoComplete="off" />
               <input type="hidden" name="_subject" value="New residential painting inquiry from sueep.com" />
+              <input type="hidden" name="_captcha" value="false" />
+              <input type="hidden" name="_template" value="table" />
               <input
                 name="name"
                 type="text"
@@ -240,6 +242,9 @@ export default function PaintingPage() {
                   type="text"
                   inputMode="numeric"
                   pattern="^\\d{5}$"
+                  minLength={5}
+                  maxLength={5}
+                  title="Please enter a 5-digit ZIP code"
                   placeholder="ZIP Code"
                   className="w-full rounded-md px-4 py-3 text-base bg-white text-gray-900 placeholder-gray-500 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#E73C6E]/50 focus:border-[#E73C6E]"
                   required
