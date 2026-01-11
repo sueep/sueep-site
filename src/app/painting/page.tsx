@@ -241,7 +241,7 @@ export default function PaintingPage() {
                   name="zip"
                   type="text"
                   inputMode="numeric"
-                  pattern="^\\d{5}$"
+                  pattern="[0-9]{5}"
                   minLength={5}
                   maxLength={5}
                   title="Please enter a 5-digit ZIP code"
