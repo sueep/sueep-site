@@ -1,8 +1,36 @@
 import Link from "next/link";
+import Script from "next/script";
 
-export default function ThankYouPage() {
+export default async function ThankYouPage({
+  searchParams,
+}: {
+  // This project’s Next.js PageProps expects `searchParams` to be a Promise.
+  // `await` also works if Next passes a plain object at runtime.
+  searchParams?: Promise<{ status?: string; service?: string }>;
+}) {
+  const sp = (searchParams ? await searchParams : undefined) ?? {};
+  const service = String(sp.service || "").toLowerCase();
+  const isCleaning = service === "cleaning";
+  const status = String(sp.status || "").toLowerCase();
+  const isOk = status === "ok";
   return (
     <main className="bg-white text-gray-900">
+      {isCleaning && isOk && (
+        <Script id="cleaning-lead-form-conversion" strategy="afterInteractive">
+          {`
+if (typeof gtag === 'function') {
+  console.log('[Ads] Cleaning lead-form conversion firing');
+  gtag('event', 'conversion', {
+    'send_to': 'AW-17637968786/DIKoCOSw7oQcEJKXuNpB',
+    'value': 1.0,
+    'currency': 'USD'
+  });
+} else {
+  console.warn('[Ads] gtag is not defined; cleaning conversion not sent.');
+}
+          `}
+        </Script>
+      )}
       <section className="min-h-[66vh] flex items-center">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <div className="mx-auto mb-6 w-16 h-16 rounded-full flex items-center justify-center bg-pink-100 text-[#E73C6E]">
@@ -16,16 +44,49 @@ export default function ThankYouPage() {
           <p className="mt-4 text-lg text-gray-700 max-w-2xl mx-auto">
             A Sueep team member will reach out shortly to confirm details and timing.
           </p>
+          {service === "painting" && (
+            <p className="mt-3 text-sm text-gray-600 max-w-2xl mx-auto">
+              Need flexibility? Ask us about financing options available through Acorn Finance.
+            </p>
+          )}
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-            <a href="/painting#estimate-form" className="px-6 py-3 bg-[#E73C6E] text-white rounded-md font-medium hover:opacity-90">
-              Submit Another Painting Request
-            </a>
-            <Link href="/painting" className="px-6 py-3 border border-gray-300 rounded-md font-medium hover:bg-gray-50">
-              Back to Painting Page
-            </Link>
+            {isCleaning ? (
+              <>
+                <a
+                  href="/commercial-cleaning#estimate-form"
+                  className="px-6 py-3 bg-[#E73C6E] text-white rounded-md font-medium hover:opacity-90"
+                >
+                  Submit Another Cleaning Request
+                </a>
+                <Link
+                  href="/commercial-cleaning"
+                  className="px-6 py-3 border border-gray-300 rounded-md font-medium hover:bg-gray-50"
+                >
+                  Back to Commercial Cleaning Page
+                </Link>
+              </>
+            ) : (
+              <>
+                <a
+                  href="/painting#estimate-form"
+                  className="px-6 py-3 bg-[#E73C6E] text-white rounded-md font-medium hover:opacity-90"
+                >
+                  Submit Another Painting Request
+                </a>
+                <Link
+                  href="/painting"
+                  className="px-6 py-3 border border-gray-300 rounded-md font-medium hover:bg-gray-50"
+                >
+                  Back to Painting Page
+                </Link>
+              </>
+            )}
           </div>
           <p className="mt-6 text-sm text-gray-600">
-            Prefer to talk? <a className="font-semibold" href="tel:+12673178268">(267) 317-8268</a>
+            Prefer to talk?{" "}
+            <a className="font-semibold" href="tel:+12672173596">
+              267-217-3596
+            </a>
           </p>
         </div>
       </section>

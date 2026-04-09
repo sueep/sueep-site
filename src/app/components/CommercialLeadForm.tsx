@@ -2,29 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-type SubmitState =
-  | { status: "idle" }
-  | { status: "submitting" }
-  | { status: "success" }
-  | { status: "error"; message: string };
-
 export default function CommercialLeadForm() {
   const [mounted, setMounted] = useState(false);
-  const [submitState, setSubmitState] = useState<SubmitState>({ status: "idle" });
-  const [redirectUrl, setRedirectUrl] = useState(() =>
-    typeof window !== "undefined"
-      ? `${window.location.origin}/thank-you`
-      : "/thank-you"
-  );
   const [errors, setErrors] = useState<{ email?: string; phone?: string }>();
 
   useEffect(() => {
     setMounted(true);
-  }, []);
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setRedirectUrl(`${window.location.origin}/thank-you?status=ok`);
-    }
   }, []);
 
   const buildingTypes = useMemo(() => ["Office", "School", "Medical", "Industrial", "Other"], []);
@@ -62,13 +45,14 @@ export default function CommercialLeadForm() {
         onSubmit={onSubmit}
         className="mt-6 grid grid-cols-1 gap-4"
         method="post"
-        action="https://formsubmit.co/fc9c50165f29e01095f6f39726348f26"
+        action="/api/contact"
         autoComplete="off"
       >
-        <input type="hidden" name="_next" value={redirectUrl} />
+        <input type="hidden" name="_service" value="cleaning" />
+        <input type="hidden" name="_captcha" value="false" />
         {/* Honeypot */}
         <input type="text" name="_honey" style={{ display: "none" }} tabIndex={-1} autoComplete="off" />
-        <input type="hidden" name="_subject" value="New website inquiry from sueep.com" />
+        <input type="hidden" name="_subject" value="New commercial cleaning inquiry from sueep.com" />
         <input
           name="name"
           type="text"
@@ -119,6 +103,7 @@ export default function CommercialLeadForm() {
             name="buildingType"
             className="w-full rounded-md px-4 py-3 text-base bg-white text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#E73C6E]/50 focus:border-[#E73C6E]"
             defaultValue=""
+            required
           >
             <option value="" disabled>Building Type</option>
             {buildingTypes.map((t) => (
@@ -129,6 +114,7 @@ export default function CommercialLeadForm() {
             name="sqftRange"
             className="w-full rounded-md px-4 py-3 text-base bg-white text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#E73C6E]/50 focus:border-[#E73C6E]"
             defaultValue=""
+            required
           >
             <option value="" disabled>Approx. Sq Ft</option>
             {sqftRanges.map((r) => (

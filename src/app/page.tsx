@@ -11,16 +11,41 @@ export default function Home() {
           <Link href="/" className="flex items-center gap-3">
             <img src="/sueeplogo.png" alt="Sueep logo" className="h-12 w-auto" />
           </Link>
-          <nav className="hidden md:flex gap-8 text-sm font-medium">
+          <nav className="hidden md:flex gap-8 text-sm font-medium items-center">
             <a href="#about" className="hover:text-[#E73C6E]">About</a>
             <a href="#services" className="hover:text-[#E73C6E]">Services</a>
             <a href="#projects" className="hover:text-[#E73C6E]">Projects</a>
-            <a href="#team" className="hover:text-[#E73C6E]">Team</a>
             <a href="#contact" className="hover:text-[#E73C6E]">Contact</a>
+            <Link
+              href="/referral"
+              className="text-xs font-normal text-gray-500 hover:text-[#E73C6E]"
+            >
+              Referral program
+            </Link>
+            <Link
+              href="/blog"
+              className="text-xs font-normal text-gray-500 hover:text-[#E73C6E]"
+            >
+              Blog
+            </Link>
           </nav>
-          <a href="#contact" className="px-4 py-2 bg-[#E73C6E] text-white rounded-md text-sm font-medium hover:opacity-90">
-            Request a Quote
-          </a>
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <Link
+              href="/referral"
+              className="md:hidden text-xs text-gray-500 hover:text-[#E73C6E] whitespace-nowrap"
+            >
+              Referral
+            </Link>
+            <Link
+              href="/blog"
+              className="md:hidden text-xs text-gray-500 hover:text-[#E73C6E] whitespace-nowrap"
+            >
+              Blog
+            </Link>
+            <a href="#contact" className="px-4 py-2 bg-[#E73C6E] text-white rounded-md text-sm font-medium hover:opacity-90">
+              Request a Quote
+            </a>
+          </div>
         </div>
       </header>
 
@@ -138,7 +163,7 @@ export default function Home() {
           <div className="md:text-right md:pl-8">
             <h3 className="font-semibold text-xl md:text-2xl">Sueep Headquarters</h3>
             <p className="mt-3 text-gray-300 text-base md:text-lg leading-relaxed">2 Bala Plaza, Suite 300<br />Bala Cynwyd, PA 19004</p>
-            <p className="mt-3 text-gray-300 text-base md:text-lg leading-relaxed">(310) 595-1220</p>
+            <p className="mt-3 text-gray-300 text-base md:text-lg leading-relaxed">(267) 217-3596</p>
             <p className="mt-3 text-gray-300 text-base md:text-lg leading-relaxed">contact@sueep.com</p>
             <p className="mt-6 text-gray-400 text-sm md:text-base">Serving PA • NJ • MD • NY</p>
           </div>
@@ -170,7 +195,13 @@ export default function Home() {
           </div>
           <div className="mt-4 flex justify-between items-center">
           <p>© {new Date().getFullYear()} Sueep LLC. All rights reserved.</p>
-          <div className="flex gap-6">
+          <div className="flex flex-wrap gap-x-6 gap-y-2 justify-end">
+            <Link href="/referral" className="text-gray-500 hover:text-white text-xs sm:text-sm">
+              Referral program
+            </Link>
+            <Link href="/blog" className="text-gray-500 hover:text-white text-xs sm:text-sm">
+              Blog
+            </Link>
             <a href="#" className="hover:text-white">Privacy</a>
             <a href="#" className="hover:text-white">Terms</a>
             <a href="#contact" className="hover:text-white">Contact</a>

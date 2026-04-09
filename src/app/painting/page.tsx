@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export const metadata = {
   title: "Residential Painting in Philadelphia | Sueep",
   description:
@@ -9,6 +11,7 @@ export const metadata = {
 export default function PaintingPage() {
   const HERO_IMAGE = "/painting/hero.jpg";
   const BOTTOM_IMAGE = "/painting/bottom.jpg";
+  const phoneHref = "tel:+12672173596";
   return (
     <main className="bg-white text-gray-900">
       {/* Hero Section (match sueep.com homepage cover) */}
@@ -22,11 +25,11 @@ export default function PaintingPage() {
         {/* Top-right prominent phone number */}
         <div className="absolute top-4 right-4 z-20">
           <a
-            href="tel:+12673178268"
+            href={phoneHref}
             className="block text-2xl md:text-4xl font-extrabold text-[#E73C6E] bg-white/90 backdrop-blur px-3 py-2 rounded-md shadow"
-            aria-label="Call Sueep at (267) 317-8268"
+            aria-label="Call Sueep at 267-217-3596"
           >
-            (267) 317-8268
+            267-217-3596
           </a>
         </div>
         <div className="relative z-10 px-6">
@@ -38,7 +41,7 @@ export default function PaintingPage() {
           </p>
           <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
             <a
-              href="tel:+12673178268"
+              href={phoneHref}
               className="inline-block px-6 py-3 bg-[#E73C6E] text-white rounded-md font-medium hover:opacity-90"
             >
               Call Now
@@ -206,7 +209,8 @@ export default function PaintingPage() {
               action="/api/contact"
               autoComplete="off"
             >
-              {/* Redirect handled by /api/contact; keep honeypot and subject for fallback */}
+              {/* Redirect handled by /api/contact; _service used for conversion tracking */}
+              <input type="hidden" name="_service" value="painting" />
               <input type="text" name="_honey" style={{ display: "none" }} tabIndex={-1} autoComplete="off" />
               <input type="hidden" name="_subject" value="New residential painting inquiry from sueep.com" />
               <input type="hidden" name="_captcha" value="false" />
@@ -275,10 +279,16 @@ export default function PaintingPage() {
               >
                 Submit Request
               </button>
+              <p className="mt-2 text-xs text-gray-500">
+                Prefer predictable costs? Ask about monthly payment options for your painting project.
+              </p>
               <p className="text-sm text-gray-600">
                 Prefer to talk? Call{" "}
-                <a href="tel:+12673178268" className="font-semibold underline decoration-transparent hover:decoration-inherit">
-                  (267) 317-8268
+                <a
+                  href={phoneHref}
+                  className="font-semibold underline decoration-transparent hover:decoration-inherit"
+                >
+                  267-217-3596
                 </a>
               </p>
             </form>
@@ -293,6 +303,24 @@ export default function PaintingPage() {
                 <li>• On‑time, tidy completion</li>
               </ul>
             </div>
+            <div className="mt-5 p-6 border border-gray-200 rounded-lg bg-white shadow-sm">
+              <h3 className="font-semibold text-lg text-gray-900">Finance Your Painting Project</h3>
+              <p className="mt-2 text-sm text-gray-700">
+                Get your home painted now and pay over time with flexible financing options through Acorn Finance.
+              </p>
+              <ul className="mt-3 space-y-1.5 text-sm text-gray-700">
+                <li>• Monthly payment options available</li>
+                <li>• Fast and simple pre-qualification</li>
+                <li>• No need to delay your project</li>
+                <li>• Subject to approval through Acorn Finance</li>
+              </ul>
+              <p className="mt-4 text-sm text-gray-600">
+                Ask us about financing when you request your estimate.
+              </p>
+              <p className="mt-2 text-[11px] leading-snug text-gray-500">
+                Financing is provided through Acorn Finance and is subject to credit approval. Terms and conditions may apply.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -303,9 +331,16 @@ export default function PaintingPage() {
           <div className="flex flex-col items-center justify-center gap-3">
             <img src="/sueeplogo.png" alt="Sueep logo" className="h-12 md:h-14 lg:h-16 w-auto" />
           </div>
-          <div className="mt-4 flex justify-between items-center">
+          <div className="mt-4 flex flex-col sm:flex-row justify-between items-center gap-3">
             <p>© {new Date().getFullYear()} Sueep LLC. All rights reserved.</p>
-            <div className="flex gap-6" />
+            <div className="flex gap-6">
+              <Link href="/blog" className="text-gray-500 hover:text-white">
+                Painting blog
+              </Link>
+              <Link href="/" className="text-gray-500 hover:text-white">
+                Home
+              </Link>
+            </div>
           </div>
         </div>
       </footer>
