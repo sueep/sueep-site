@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import type { SqFtBand, PaintScope, CeilingScope, WallCondition, Occupancy, Timeline } from "@/lib/paintingQuote";
+import { getResidentialPaintingContractHref } from "@/lib/paintingContract";
 import { parseStoredPaintingLead, PAINTING_LEAD_STORAGE_KEY, type StoredPaintingLead } from "@/lib/paintingLeadStorage";
 
 type MainStep = "details" | "quote";
@@ -42,6 +43,7 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
   const [loading, setLoading] = useState(false);
   const [payLoading, setPayLoading] = useState(false);
   const [testModeDeposit, setTestModeDeposit] = useState(false);
+  const [contractAgreed, setContractAgreed] = useState(false);
 
   const [roomCount, setRoomCount] = useState(2);
   const [sqFtBand, setSqFtBand] = useState<SqFtBand>("1200_2000");
@@ -113,6 +115,7 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
         breakdown: data.breakdown,
         disclaimer: data.disclaimer,
       });
+      setContractAgreed(false);
       setStep("quote");
       scrollTop();
     } catch {
@@ -122,8 +125,15 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
     }
   };
 
+  const contractHref = getResidentialPaintingContractHref();
+  const contractIsAbsolute = /^https?:\/\//i.test(contractHref);
+
   const payDeposit = async () => {
     if (!lead) return;
+    if (!contractAgreed) {
+      setError("Please read the customer agreement and check the box to continue.");
+      return;
+    }
     setError("");
     setPayLoading(true);
     try {
@@ -143,6 +153,7 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
           wallCondition,
           occupancy,
           timeline,
+          contractAccepted: true,
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -405,12 +416,49 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
           </div>
 
           <div className="rounded-xl border border-gray-200 bg-gray-50 p-6">
-            <h3 className="font-semibold text-lg text-gray-900">Hold your spot</h3>
-            <p className="mt-2 text-sm text-gray-600">
-              Place a refundable deposit (subject to written terms from Sueep) so we can prioritize your dates. Amount below is{" "}
-              <strong>{quote.depositDisplay}</strong> — charged only after you complete secure checkout.
+            <h3 className="font-semibold text-lg text-gray-900">Schedule & materials deposit</h3>
+            <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+              Your deposit is <strong>50% of the midpoint</strong> of the planning range above ({quote.depositDisplay}). It reserves your place on our schedule and lets us order paint and materials. You&apos;ll complete payment on our secure checkout page.
             </p>
-            <button type="button" onClick={payDeposit} disabled={payLoading} className={`mt-4 ${btnPrimary}`}>
+            <p className="mt-3 text-sm text-gray-600 leading-relaxed">
+              {contractIsAbsolute ? (
+                <a
+                  href={contractHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#E73C6E] font-semibold underline hover:opacity-90"
+                >
+                  View customer agreement & deposit terms
+                </a>
+              ) : (
+                <Link
+                  href={contractHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#E73C6E] font-semibold underline hover:opacity-90"
+                >
+                  View customer agreement & deposit terms
+                </Link>
+              )}{" "}
+              (opens in a new tab)
+            </p>
+            <label className="mt-4 flex items-start gap-3 cursor-pointer text-sm text-gray-800 text-left">
+              <input
+                type="checkbox"
+                checked={contractAgreed}
+                onChange={(e) => setContractAgreed(e.target.checked)}
+                className="mt-1 h-4 w-4 rounded border-gray-300 text-[#E73C6E] focus:ring-[#E73C6E]"
+              />
+              <span>
+                I have read the agreement and agree to abide by it. I understand the deposit is 50% of the planning midpoint for scheduling and materials, and that final pricing will be confirmed in writing by Sueep before work begins.
+              </span>
+            </label>
+            <button
+              type="button"
+              onClick={payDeposit}
+              disabled={payLoading || !contractAgreed}
+              className={`mt-4 ${btnPrimary} ${!contractAgreed ? "opacity-50 cursor-not-allowed" : ""}`}
+            >
               {payLoading ? "Starting checkout…" : `Pay ${quote.depositDisplay} deposit`}
             </button>
 
@@ -423,7 +471,8 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
                 </p>
                 <a
                   href="/thank-you?status=ok&service=painting&deposit=simulated"
-                  className="mt-3 inline-block px-4 py-2 bg-amber-800 text-white text-sm font-medium rounded-md hover:opacity-90"
+                  className={`mt-3 inline-block px-4 py-2 bg-amber-800 text-white text-sm font-medium rounded-md hover:opacity-90 ${!contractAgreed ? "pointer-events-none opacity-50" : ""}`}
+                  aria-disabled={!contractAgreed}
                 >
                   Simulate successful deposit (testing only)
                 </a>

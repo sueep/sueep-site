@@ -155,9 +155,13 @@ export function computePaintingQuote(input: PaintingQuoteInput): PaintingQuoteRe
   const highCents = Math.max(lowCents + 50_00, roundToNearest50Dollars(baseMax * 100));
 
   const mid = (lowCents + highCents) / 2;
-  const depositCents = clamp(Math.round(mid * 0.1), 150_00, 250_000);
+  /** 50% of midpoint of the planning range — secures scheduling and paint / material ordering; balance per contract. */
+  const depositRaw = Math.round(mid * 0.5);
+  const depositCents = Math.max(50, roundToNearest50Dollars(depositRaw));
 
-  breakdown.push(`Suggested deposit to hold a crew slot: 10% of midpoint (min $150, max $2,500 cap).`);
+  breakdown.push(
+    `Deposit (${formatUsd(depositCents)}): 50% of the midpoint of your planning range — reserves your schedule and allows us to order paint and materials. Remaining balance per your written agreement with Sueep.`
+  );
 
   return {
     lowCents,

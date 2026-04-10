@@ -12,10 +12,15 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const email = String(body?.email || "").trim();
     const name = String(body?.name || "").trim();
+    const contractAccepted = body?.contractAccepted === true;
     const input = parsePaintingQuotePayload(body);
 
     if (!input || !email || !name) {
       return NextResponse.json({ error: "Invalid checkout request" }, { status: 400 });
+    }
+
+    if (!contractAccepted) {
+      return NextResponse.json({ error: "You must agree to the customer agreement before paying." }, { status: 400 });
     }
 
     const quote = computePaintingQuote(input);
@@ -41,8 +46,9 @@ export async function POST(req: NextRequest) {
           price_data: {
             currency: "usd",
             product_data: {
-              name: "Painting project deposit — hold your spot",
-              description: `Estimated range was provided online; final price confirmed by Sueep before work.`,
+              name: "Residential painting deposit (50% of planning midpoint)",
+              description:
+                "Secures scheduling and paint/material orders. Customer agreed to Sueep terms online. Final price confirmed in writing before work.",
             },
             unit_amount: quote.depositCents,
           },
@@ -57,6 +63,8 @@ export async function POST(req: NextRequest) {
         serviceType: input.serviceType,
         roomCount: String(input.roomCount),
         sqFtBand: input.sqFtBand,
+        contract_accepted: "true",
+        deposit_type: "50pct_planning_midpoint",
       },
     });
 

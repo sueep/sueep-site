@@ -78,7 +78,7 @@ async function notifyAfterQuote(input: PaintingQuoteInput, q: PaintingQuoteResul
         <p><strong>Original notes:</strong></p>
         <pre style="white-space:pre-wrap;margin:0 0 16px 0">${escapeHtml(lead.message || "—")}</pre>
         <p><strong>Planning range:</strong> ${escapeHtml(range)}</p>
-        <p><strong>Suggested deposit:</strong> ${escapeHtml(formatUsd(q.depositCents))}</p>
+        <p><strong>Deposit (50% of planning midpoint):</strong> ${escapeHtml(formatUsd(q.depositCents))}</p>
         <p><strong>Service type:</strong> ${escapeHtml(input.serviceType)}</p>
         <p><strong>Rooms:</strong> ${input.roomCount} · <strong>Sq ft band:</strong> ${escapeHtml(input.sqFtBand)} · <strong>Scope:</strong> ${escapeHtml(input.scope)}</p>
         <p><strong>Ceilings:</strong> ${escapeHtml(input.ceilings)} · <strong>Walls:</strong> ${escapeHtml(input.wallCondition)} · <strong>Occupancy:</strong> ${escapeHtml(input.occupancy)} · <strong>Timeline:</strong> ${escapeHtml(input.timeline)}</p>
@@ -128,7 +128,7 @@ async function notifyAfterQuote(input: PaintingQuoteInput, q: PaintingQuoteResul
         <p>Hi ${escapeHtml(lead.name.split(/\s+/)[0] || lead.name)},</p>
         <p>Thanks for the extra details — <strong>we're on it</strong> and a Sueep team member will follow up to confirm scope and scheduling.</p>
         <p>Based on what you shared, your <strong>planning range</strong> is about <strong>${escapeHtml(range)}</strong>. Final pricing is always confirmed after we review your property.</p>
-        <p>If you chose to place a deposit on the next screen, that helps us hold crew availability; terms are confirmed in writing before work begins.</p>
+        <p>If you place a deposit on the next screen, it is 50% of the midpoint of this range — it secures scheduling and lets us order paint and materials. You&apos;ll agree to our customer terms before paying; final pricing is confirmed in writing before work begins.</p>
         <p>— Sueep</p>
       </div>
     `;
