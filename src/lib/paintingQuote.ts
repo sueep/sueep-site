@@ -43,6 +43,21 @@ function clamp(n: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, n));
 }
 
+function sqFtBandLabel(band: SqFtBand): string {
+  switch (band) {
+    case "under_1200":
+      return "under 1,200 sq ft";
+    case "1200_2000":
+      return "1,200–2,000 sq ft";
+    case "2000_3500":
+      return "2,000–3,500 sq ft";
+    case "over_3500":
+      return "over 3,500 sq ft";
+    default:
+      return band;
+  }
+}
+
 function isInterior(serviceType: string): boolean {
   return /interior/i.test(serviceType) && !/exterior/i.test(serviceType);
 }
@@ -86,7 +101,7 @@ export function computePaintingQuote(input: PaintingQuoteInput): PaintingQuoteRe
   const m = sqMult[input.sqFtBand] ?? 1;
   baseMin *= m;
   baseMax *= m;
-  breakdown.push(`Home size factor (${input.sqFtBand.replace(/_/g, " ")}): ×${m.toFixed(2)}`);
+  breakdown.push(`Home size factor (${sqFtBandLabel(input.sqFtBand)}): ×${m.toFixed(2)}`);
 
   const rooms = clamp(Math.round(input.roomCount), 1, 20);
   if (isInterior(input.serviceType) || /other/i.test(input.serviceType)) {
