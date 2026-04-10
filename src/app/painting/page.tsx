@@ -1,5 +1,5 @@
 import Link from "next/link";
-import PaintingEstimateWizard from "./PaintingEstimateWizard";
+import PaintingLeadForm from "./PaintingLeadForm";
 
 export const metadata = {
   title: "Residential Painting in Philadelphia | Sueep",
@@ -202,10 +202,7 @@ export default function PaintingPage() {
       <section className="py-20" aria-labelledby="lead-heading">
         <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-8 items-start">
           <div>
-            <h2 id="lead-heading" className="sr-only">
-              Request a painting estimate
-            </h2>
-            <PaintingEstimateWizard />
+            <PaintingLeadForm />
           </div>
           <div>
             <div className="p-6 border border-gray-200 rounded-lg bg-gray-50">

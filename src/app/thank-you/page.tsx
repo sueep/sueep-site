@@ -57,7 +57,29 @@ if (typeof gtag === 'function') {
               Test mode: deposit was not charged. This confirmation is for local testing only.
             </p>
           )}
-          {service === "painting" && !depositPaid && !depositSimulated && (
+          {service === "painting" && isOk && !depositPaid && !depositSimulated && (
+            <>
+              <p className="mt-3 text-sm text-gray-700 max-w-2xl mx-auto">
+                <strong>We&apos;re on it.</strong> You&apos;ll hear from us shortly. Optional: answer a few quick follow-up questions for an instant planning range and the option to place a deposit to hold your spot.
+              </p>
+              <div className="mt-6 max-w-xl mx-auto rounded-xl border border-[#E73C6E]/25 bg-pink-50/80 px-5 py-5 text-left">
+                <p className="text-sm font-semibold text-gray-900">Next step — narrow your estimate</p>
+                <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+                  Continue in the same browser you used to submit the form (so we can match your request). You&apos;ll see scope questions, then a planning range and secure checkout for a deposit.
+                </p>
+                <Link
+                  href="/painting/next-steps"
+                  className="mt-4 inline-flex items-center justify-center px-6 py-3 rounded-md bg-[#E73C6E] text-white text-sm font-semibold hover:opacity-90 w-full sm:w-auto text-center"
+                >
+                  Continue to follow-up questions
+                </Link>
+              </div>
+              <p className="mt-4 text-sm text-gray-600 max-w-2xl mx-auto">
+                Need flexibility? Ask us about financing options available through Acorn Finance.
+              </p>
+            </>
+          )}
+          {service === "painting" && (!isOk || depositPaid || depositSimulated) && (
             <p className="mt-3 text-sm text-gray-600 max-w-2xl mx-auto">
               Need flexibility? Ask us about financing options available through Acorn Finance.
             </p>

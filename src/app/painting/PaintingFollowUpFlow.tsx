@@ -1,9 +1,11 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
 import type { SqFtBand, PaintScope, CeilingScope, WallCondition, Occupancy, Timeline } from "@/lib/paintingQuote";
+import { parseStoredPaintingLead, PAINTING_LEAD_STORAGE_KEY, type StoredPaintingLead } from "@/lib/paintingLeadStorage";
 
-type WizardStep = "initial" | "details" | "quote";
+type Step = "details" | "quote";
 
 type QuoteResponse = {
   lowDisplay: string;
@@ -19,23 +21,15 @@ const inputClass =
 const selectClass = inputClass;
 const labelClass = "block text-sm font-medium text-gray-700 mb-1";
 
-export default function PaintingEstimateWizard() {
-  const phoneHref = "tel:+12672173596";
+export default function PaintingFollowUpFlow() {
+  const [lead, setLead] = useState<StoredPaintingLead | null>(null);
+  const [hydrated, setHydrated] = useState(false);
 
-  const [step, setStep] = useState<WizardStep>("initial");
+  const [step, setStep] = useState<Step>("details");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [payLoading, setPayLoading] = useState(false);
   const [testModeDeposit, setTestModeDeposit] = useState(false);
-
-  const [honey, setHoney] = useState("");
-
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [zip, setZip] = useState("");
-  const [serviceType, setServiceType] = useState("");
-  const [message, setMessage] = useState("");
 
   const [roomCount, setRoomCount] = useState(2);
   const [sqFtBand, setSqFtBand] = useState<SqFtBand>("1200_2000");
@@ -47,47 +41,23 @@ export default function PaintingEstimateWizard() {
 
   const [quote, setQuote] = useState<QuoteResponse | null>(null);
 
-  const scrollToForm = useCallback(() => {
-    document.getElementById("estimate-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(PAINTING_LEAD_STORAGE_KEY);
+      setLead(parseStoredPaintingLead(raw));
+    } catch {
+      setLead(null);
+    }
+    setHydrated(true);
   }, []);
 
-  const submitInitial = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-    try {
-      const res = await fetch("/api/painting/lead", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          name,
-          email,
-          phone,
-          zip,
-          serviceType,
-          message,
-          _honey: honey,
-        }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        setError(typeof data.error === "string" ? data.error : "Could not save your request. Try again or call us.");
-        setLoading(false);
-        return;
-      }
-      setStep("details");
-      setTestModeDeposit(false);
-      setQuote(null);
-      scrollToForm();
-    } catch {
-      setError("Network error. Check your connection or call us.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const scrollTop = useCallback(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   const submitDetails = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!lead) return;
     setError("");
     setLoading(true);
     setTestModeDeposit(false);
@@ -96,7 +66,7 @@ export default function PaintingEstimateWizard() {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          serviceType,
+          serviceType: lead.serviceType,
           roomCount,
           sqFtBand,
           scope,
@@ -104,6 +74,13 @@ export default function PaintingEstimateWizard() {
           wallCondition,
           occupancy,
           timeline,
+          leadContact: {
+            name: lead.name,
+            email: lead.email,
+            phone: lead.phone,
+            zip: lead.zip,
+            message: lead.message,
+          },
         }),
       });
       const data = (await res.json()) as QuoteResponse & { error?: string };
@@ -121,7 +98,7 @@ export default function PaintingEstimateWizard() {
         disclaimer: data.disclaimer,
       });
       setStep("quote");
-      scrollToForm();
+      scrollTop();
     } catch {
       setError("Network error. Try again.");
     } finally {
@@ -130,6 +107,7 @@ export default function PaintingEstimateWizard() {
   };
 
   const payDeposit = async () => {
+    if (!lead) return;
     setError("");
     setPayLoading(true);
     try {
@@ -137,11 +115,11 @@ export default function PaintingEstimateWizard() {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          name,
-          email,
-          phone,
-          zip,
-          serviceType,
+          name: lead.name,
+          email: lead.email,
+          phone: lead.phone,
+          zip: lead.zip,
+          serviceType: lead.serviceType,
           roomCount,
           sqFtBand,
           scope,
@@ -163,7 +141,7 @@ export default function PaintingEstimateWizard() {
       }
       if (data.testMode) {
         setTestModeDeposit(true);
-        scrollToForm();
+        scrollTop();
       }
     } catch {
       setError("Network error starting checkout.");
@@ -172,19 +150,45 @@ export default function PaintingEstimateWizard() {
     }
   };
 
+  if (!hydrated) {
+    return (
+      <div className="min-h-[200px] flex items-center justify-center text-gray-500 text-sm" aria-hidden>
+        Loading…
+      </div>
+    );
+  }
+
+  if (!lead) {
+    return (
+      <div className="rounded-xl border border-amber-200 bg-amber-50 p-6 text-amber-950">
+        <p className="font-semibold">Start from the painting page</p>
+        <p className="mt-2 text-sm leading-relaxed">
+          We couldn&apos;t find your recent request in this browser. Submit the form on the painting page first — you&apos;ll land on the thank-you page — then come back here for follow-up questions and an instant planning range.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <Link href="/painting#estimate-form" className="inline-flex px-5 py-2.5 bg-[#E73C6E] text-white text-sm font-medium rounded-md hover:opacity-90">
+            Go to painting estimate form
+          </Link>
+          <Link href="/thank-you?status=ok&service=painting" className="inline-flex px-5 py-2.5 border border-amber-800/30 text-sm font-medium rounded-md hover:bg-amber-100">
+            Open thank-you page
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const firstName = lead.name.split(/\s+/)[0] || lead.name;
+
   return (
-    <div id="estimate-form">
-      <h2 className="text-2xl md:text-3xl font-bold uppercase">Request a Painting Estimate</h2>
-      <p className="mt-2 text-gray-600">
-        Tell us about your project — we&apos;ll show a planning range and optional deposit to hold your spot. Final pricing is always confirmed by Sueep before work begins.
+    <div>
+      <p className="text-sm text-gray-600">
+        Hi {firstName} — thanks again for reaching out. We&apos;re on it and will follow up soon. A few more questions help us show a planning range and optional deposit to hold your spot.
       </p>
 
-      {/* Step indicator */}
       <ol className="mt-6 flex flex-wrap gap-2 text-xs sm:text-sm font-medium text-gray-600" aria-label="Steps">
         {[
-          { id: "initial" as const, label: "1. Contact" },
-          { id: "details" as const, label: "2. Scope" },
-          { id: "quote" as const, label: "3. Quote & deposit" },
+          { id: "details" as const, label: "1. Scope" },
+          { id: "quote" as const, label: "2. Quote & deposit" },
         ].map((s) => (
           <li
             key={s.id}
@@ -203,90 +207,10 @@ export default function PaintingEstimateWizard() {
         </p>
       ) : null}
 
-      {step === "initial" && (
-        <form className="mt-6 grid grid-cols-1 gap-4" onSubmit={submitInitial} autoComplete="on">
-          <input type="text" name="_hp" value={honey} onChange={(e) => setHoney(e.target.value)} className="hidden" tabIndex={-1} autoComplete="off" aria-hidden="true" />
-          <input name="name" type="text" placeholder="Full Name" className={inputClass} required value={name} onChange={(e) => setName(e.target.value)} />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input
-              name="email"
-              type="email"
-              placeholder="you@example.com *"
-              className={inputClass}
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-              name="phone"
-              type="tel"
-              inputMode="tel"
-              pattern="^\\+?[0-9\\s\\-()]{7,}$"
-              placeholder="(555) 555-5555 *"
-              className={inputClass}
-              required
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input
-              name="zip"
-              type="text"
-              inputMode="numeric"
-              pattern="[0-9]{5}"
-              minLength={5}
-              maxLength={5}
-              title="Please enter a 5-digit ZIP code"
-              placeholder="ZIP Code"
-              className={inputClass}
-              required
-              value={zip}
-              onChange={(e) => setZip(e.target.value)}
-            />
-            <select name="serviceType" className={selectClass} required value={serviceType} onChange={(e) => setServiceType(e.target.value)}>
-              <option value="" disabled>
-                Service Type
-              </option>
-              <option value="Interior Painting">Interior Painting</option>
-              <option value="Exterior Painting">Exterior Painting</option>
-              <option value="Trim & Doors">Trim & Doors</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-          <textarea
-            name="message"
-            placeholder="Rooms, colors, timing, any details we should know"
-            rows={5}
-            className={inputClass}
-            required
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-          <button
-            type="submit"
-            disabled={loading}
-            className="px-6 py-3 bg-[#E73C6E] text-white font-medium rounded-md hover:opacity-90 disabled:opacity-60"
-          >
-            {loading ? "Sending…" : "Continue to scope questions"}
-          </button>
-          <p className="text-sm text-gray-600">
-            Prefer to talk? Call{" "}
-            <a href={phoneHref} className="font-semibold underline decoration-transparent hover:decoration-inherit">
-              267-217-3596
-            </a>
-          </p>
-        </form>
-      )}
-
       {step === "details" && (
         <form className="mt-6 grid grid-cols-1 gap-5 bg-white border border-gray-200 rounded-lg p-5 sm:p-6" onSubmit={submitDetails}>
           <p className="text-sm text-gray-600">
-            A few more questions help us narrow an on-the-spot planning range. You can go{" "}
-            <button type="button" className="text-[#E73C6E] font-medium underline" onClick={() => setStep("initial")}>
-              back
-            </button>{" "}
-            to edit your contact info.
+            Service from your request: <strong>{lead.serviceType}</strong>
           </p>
           <div>
             <label className={labelClass} htmlFor="roomCount">
@@ -432,18 +356,13 @@ export default function PaintingEstimateWizard() {
             )}
           </div>
 
-          <div className="flex flex-wrap gap-3">
-            <button type="button" className="text-sm text-[#E73C6E] font-medium underline" onClick={() => setStep("details")}>
-              Adjust scope answers
-            </button>
-            <button type="button" className="text-sm text-gray-600 underline" onClick={() => setStep("initial")}>
-              Start over
-            </button>
-          </div>
+          <button type="button" className="text-sm text-[#E73C6E] font-medium underline" onClick={() => setStep("details")}>
+            Adjust scope answers
+          </button>
         </div>
       )}
 
-      <p className="mt-6 text-xs text-gray-500">
+      <p className="mt-8 text-xs text-gray-500">
         Prefer predictable monthly costs? Ask about financing through Acorn Finance when we follow up.
       </p>
     </div>
