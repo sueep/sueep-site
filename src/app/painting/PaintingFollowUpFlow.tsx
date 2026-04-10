@@ -1,15 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import PaintingInlineCheckout, { type InlineCheckoutPhase } from "@/app/painting/PaintingInlineCheckout";
+import { paintingStripePromise } from "@/lib/stripePublishableClient";
 import type { SqFtBand, PaintScope, CeilingScope, WallCondition, Occupancy, Timeline } from "@/lib/paintingQuote";
-import {
-  parseStoredPaintingLead,
-  PAINTING_CHECKOUT_STORAGE_KEY,
-  PAINTING_LEAD_STORAGE_KEY,
-  type StoredPaintingLead,
-} from "@/lib/paintingLeadStorage";
+import { parseStoredPaintingLead, PAINTING_LEAD_STORAGE_KEY, type StoredPaintingLead } from "@/lib/paintingLeadStorage";
 
 type MainStep = "details" | "quote";
 type DetailPage = 1 | 2 | 3;
@@ -39,7 +35,6 @@ type Props = {
 };
 
 export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) {
-  const router = useRouter();
   const [lead, setLead] = useState<StoredPaintingLead | null>(null);
   const [hydrated, setHydrated] = useState(false);
 
@@ -48,6 +43,11 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [payLoading, setPayLoading] = useState(false);
+
+  const [checkoutActive, setCheckoutActive] = useState(false);
+  const [checkoutPhase, setCheckoutPhase] = useState<"idle" | InlineCheckoutPhase>("idle");
+  const [checkoutClientSecret, setCheckoutClientSecret] = useState<string | null>(null);
+  const [checkoutErrMsg, setCheckoutErrMsg] = useState("");
 
   const [roomCount, setRoomCount] = useState(2);
   const [sqFtBand, setSqFtBand] = useState<SqFtBand>("1200_2000");
@@ -68,6 +68,13 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
     }
     setHydrated(true);
   }, []);
+
+  useEffect(() => {
+    if (!checkoutActive || checkoutPhase === "idle") return;
+    requestAnimationFrame(() => {
+      document.getElementById("painting-embedded-checkout")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, [checkoutActive, checkoutPhase, checkoutClientSecret]);
 
   const scrollToFollowUp = useCallback(() => {
     document.getElementById("painting-follow-up")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -127,14 +134,26 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
     }
   };
 
-  const payDeposit = () => {
+  const payDeposit = async () => {
     if (!lead || !quote) return;
     setError("");
+    setCheckoutErrMsg("");
+    setCheckoutActive(true);
+    setCheckoutPhase("loading");
+    setCheckoutClientSecret(null);
     setPayLoading(true);
+
+    if (!paintingStripePromise) {
+      setCheckoutPhase("no_pk");
+      setPayLoading(false);
+      return;
+    }
+
     try {
-      sessionStorage.setItem(
-        PAINTING_CHECKOUT_STORAGE_KEY,
-        JSON.stringify({
+      const res = await fetch("/api/painting/checkout", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
           name: lead.name,
           email: lead.email,
           phone: lead.phone,
@@ -147,12 +166,33 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
           wallCondition,
           occupancy,
           timeline,
-          depositDisplay: quote.depositDisplay,
+          checkoutUi: "embedded",
         }),
-      );
-      router.push("/painting/checkout");
+      });
+      const data = (await res.json()) as {
+        clientSecret?: string;
+        testMode?: boolean;
+        error?: string;
+      };
+      if (!res.ok) {
+        setCheckoutPhase("error");
+        setCheckoutErrMsg(typeof data.error === "string" ? data.error : "Checkout could not start.");
+        return;
+      }
+      if (data.testMode) {
+        setCheckoutPhase("test");
+        return;
+      }
+      if (typeof data.clientSecret === "string" && data.clientSecret) {
+        setCheckoutClientSecret(data.clientSecret);
+        setCheckoutPhase("ready");
+        return;
+      }
+      setCheckoutPhase("error");
+      setCheckoutErrMsg("Payment session was not created. Try again.");
     } catch {
-      setError("Could not open checkout. Try again.");
+      setCheckoutPhase("error");
+      setCheckoutErrMsg("Network error. Try again.");
     } finally {
       setPayLoading(false);
     }
@@ -402,17 +442,38 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
               Your deposit is <strong>50% of the midpoint</strong> of the planning range above ({quote.depositDisplay}). It reserves your place on our schedule and lets us order paint and materials.
             </p>
             <p className="mt-3 text-sm text-gray-600 leading-relaxed">
-              Next you&apos;ll go to our checkout page on sueep.com: the same deposit terms in plain language, then Stripe&apos;s secure card form on that page. You&apos;ll accept the customer agreement there before paying.
+              When you&apos;re ready, tap the button — the secure payment form opens <strong>below on this same page</strong>. You&apos;ll review the agreement and pay with your card without leaving this screen.
             </p>
-            <button type="button" onClick={payDeposit} disabled={payLoading} className={`mt-4 ${btnPrimary}`}>
-              {payLoading ? "Opening checkout…" : `Pay ${quote.depositDisplay} deposit`}
+            <button
+              type="button"
+              onClick={() => void payDeposit()}
+              disabled={payLoading || (checkoutPhase === "ready" && !!checkoutClientSecret)}
+              className={`mt-4 ${btnPrimary}`}
+            >
+              {payLoading
+                ? "Preparing checkout…"
+                : checkoutPhase === "ready" && checkoutClientSecret
+                  ? "Complete payment below"
+                  : `Pay ${quote.depositDisplay} deposit`}
             </button>
           </div>
+
+          <PaintingInlineCheckout
+            active={checkoutActive}
+            phase={checkoutPhase === "idle" ? "loading" : checkoutPhase}
+            clientSecret={checkoutClientSecret}
+            stripePromise={paintingStripePromise}
+            errorMessage={checkoutErrMsg}
+          />
 
           <button
             type="button"
             className="text-sm text-[#E73C6E] font-medium underline"
             onClick={() => {
+              setCheckoutActive(false);
+              setCheckoutPhase("idle");
+              setCheckoutClientSecret(null);
+              setCheckoutErrMsg("");
               setStep("details");
               setDetailPage(3);
               scrollToFollowUp();

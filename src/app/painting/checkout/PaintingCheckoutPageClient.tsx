@@ -4,12 +4,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { EmbeddedCheckout, EmbeddedCheckoutProvider } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
 import PaintingDepositTerms from "@/app/painting/PaintingDepositTerms";
 import { PAINTING_CHECKOUT_STORAGE_KEY } from "@/lib/paintingLeadStorage";
-
-const pk = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
-const stripePromise = pk ? loadStripe(pk) : null;
+import { paintingStripePromise } from "@/lib/stripePublishableClient";
 
 type CheckoutStoredPayload = {
   name: string;
@@ -193,7 +190,7 @@ export default function PaintingCheckoutPageClient() {
     );
   }
 
-  if (!stripePromise) {
+  if (!paintingStripePromise) {
     return (
       <main className="bg-white text-gray-900 min-h-screen">
         <div className="max-w-3xl mx-auto px-6 py-12 md:py-16">
@@ -229,7 +226,7 @@ export default function PaintingCheckoutPageClient() {
           <p className="mt-2 text-sm text-gray-600">Secured by Stripe. Cards only; Link is hidden for this checkout.</p>
           <div className="mt-6 min-h-[400px]">
             {clientSecret ? (
-              <EmbeddedCheckoutProvider key={clientSecret} stripe={stripePromise} options={{ clientSecret }}>
+              <EmbeddedCheckoutProvider key={clientSecret} stripe={paintingStripePromise} options={{ clientSecret }}>
                 <EmbeddedCheckout />
               </EmbeddedCheckoutProvider>
             ) : (
