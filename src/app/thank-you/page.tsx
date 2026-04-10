@@ -17,6 +17,7 @@ export default async function ThankYouPage({
   const deposit = String(sp.deposit || "").toLowerCase();
   const depositPaid = deposit === "paid";
   const depositSimulated = deposit === "simulated";
+  const paintingQuoteFlow = service === "painting" && isOk && !depositPaid && !depositSimulated;
   return (
     <main className="bg-white text-gray-900">
       {isCleaning && isOk && (
@@ -35,17 +36,39 @@ if (typeof gtag === 'function') {
           `}
         </Script>
       )}
-      <section className="min-h-[66vh] flex items-center">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <div className="mx-auto mb-6 w-16 h-16 rounded-full flex items-center justify-center bg-pink-100 text-[#E73C6E]">
-            <svg viewBox="0 0 24 24" className="w-8 h-8" aria-hidden="true">
+      <section
+        className={
+          paintingQuoteFlow
+            ? "py-6 md:py-8"
+            : "min-h-[66vh] flex flex-col justify-center py-10 md:py-14"
+        }
+      >
+        <div
+          className={`mx-auto px-4 sm:px-6 text-center ${paintingQuoteFlow ? "max-w-5xl" : "max-w-3xl"}`}
+        >
+          <div
+            className={`mx-auto flex items-center justify-center rounded-full bg-pink-100 text-[#E73C6E] ${
+              paintingQuoteFlow ? "mb-3 h-11 w-11" : "mb-6 h-16 w-16"
+            }`}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              className={paintingQuoteFlow ? "h-5 w-5" : "h-8 w-8"}
+              aria-hidden="true"
+            >
               <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-1 15-5-5 1.41-1.41L11 14.17l5.59-5.59L18 10l-7 7Z"/>
             </svg>
           </div>
-          <h1 className="text-3xl md:text-4xl font-extrabold uppercase tracking-wide">
+          <h1
+            className={`font-extrabold uppercase tracking-wide ${
+              paintingQuoteFlow ? "text-xl sm:text-2xl md:text-3xl" : "text-3xl md:text-4xl"
+            }`}
+          >
             Thanks—your request was received
           </h1>
-          <p className="mt-4 text-lg text-gray-700 max-w-2xl mx-auto">
+          <p
+            className={`mx-auto max-w-2xl text-gray-700 ${paintingQuoteFlow ? "mt-2 text-sm sm:text-base" : "mt-4 text-lg"}`}
+          >
             A Sueep team member will reach out shortly to confirm details and timing.
           </p>
           {service === "painting" && depositPaid && (
@@ -60,14 +83,15 @@ if (typeof gtag === 'function') {
           )}
           {service === "painting" && isOk && !depositPaid && !depositSimulated && (
             <>
-              <p className="mt-3 text-sm text-gray-700 max-w-2xl mx-auto">
-                <strong>We&apos;re on it.</strong> You&apos;ll hear from us shortly. A few quick questions below help us show a planning range and optional deposit to hold your spot — same browser as when you submitted works best.
+              <p className="mx-auto mt-2 max-w-2xl text-xs text-gray-600 sm:text-sm">
+                <strong className="text-gray-800">We&apos;re on it.</strong> Answer a few quick questions for your range
+                and optional deposit — same browser you used to submit works best.
               </p>
-              <div className="mt-8 max-w-xl mx-auto w-full text-left">
+              <div className="mx-auto mt-5 w-full max-w-5xl text-left">
                 <PaintingFollowUpFlow variant="thankYou" />
               </div>
-              <p className="mt-10 text-sm text-gray-600 max-w-2xl mx-auto text-center">
-                Need flexibility? Ask us about financing options available through Acorn Finance.
+              <p className="mx-auto mt-4 max-w-2xl text-center text-xs text-gray-500">
+                Financing: ask about Acorn Finance when we follow up.
               </p>
             </>
           )}
@@ -76,40 +100,52 @@ if (typeof gtag === 'function') {
               Need flexibility? Ask us about financing options available through Acorn Finance.
             </p>
           )}
-          <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-            {isCleaning ? (
-              <>
-                <a
-                  href="/commercial-cleaning#estimate-form"
-                  className="px-6 py-3 bg-[#E73C6E] text-white rounded-md font-medium hover:opacity-90"
-                >
-                  Submit Another Cleaning Request
-                </a>
-                <Link
-                  href="/commercial-cleaning"
-                  className="px-6 py-3 border border-gray-300 rounded-md font-medium hover:bg-gray-50"
-                >
-                  Back to Commercial Cleaning Page
-                </Link>
-              </>
-            ) : (
-              <>
-                <a
-                  href="/painting#estimate-form"
-                  className="px-6 py-3 bg-[#E73C6E] text-white rounded-md font-medium hover:opacity-90"
-                >
-                  Submit Another Painting Request
-                </a>
-                <Link
-                  href="/painting"
-                  className="px-6 py-3 border border-gray-300 rounded-md font-medium hover:bg-gray-50"
-                >
-                  Back to Painting Page
-                </Link>
-              </>
-            )}
-          </div>
-          <p className="mt-6 text-sm text-gray-600">
+          {paintingQuoteFlow ? (
+            <p className="mt-3 text-center text-xs text-gray-500">
+              <a href="/painting#estimate-form" className="font-medium text-[#E73C6E] hover:underline">
+                New painting estimate
+              </a>
+              <span className="mx-2 text-gray-300">|</span>
+              <Link href="/painting" className="font-medium text-gray-600 hover:underline">
+                Back to painting
+              </Link>
+            </p>
+          ) : (
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+              {isCleaning ? (
+                <>
+                  <a
+                    href="/commercial-cleaning#estimate-form"
+                    className="px-6 py-3 bg-[#E73C6E] text-white rounded-md font-medium hover:opacity-90"
+                  >
+                    Submit Another Cleaning Request
+                  </a>
+                  <Link
+                    href="/commercial-cleaning"
+                    className="px-6 py-3 border border-gray-300 rounded-md font-medium hover:bg-gray-50"
+                  >
+                    Back to Commercial Cleaning Page
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <a
+                    href="/painting#estimate-form"
+                    className="px-6 py-3 bg-[#E73C6E] text-white rounded-md font-medium hover:opacity-90"
+                  >
+                    Submit Another Painting Request
+                  </a>
+                  <Link
+                    href="/painting"
+                    className="px-6 py-3 border border-gray-300 rounded-md font-medium hover:bg-gray-50"
+                  >
+                    Back to Painting Page
+                  </Link>
+                </>
+              )}
+            </div>
+          )}
+          <p className={`text-sm text-gray-600 ${paintingQuoteFlow ? "mt-3" : "mt-6"}`}>
             Prefer to talk?{" "}
             <a className="font-semibold" href="tel:+12672173596">
               267-217-3596

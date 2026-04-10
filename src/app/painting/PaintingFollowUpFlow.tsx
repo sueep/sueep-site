@@ -25,7 +25,7 @@ const selectClass = inputClass;
 const labelClass = "block text-sm font-medium text-gray-700 mb-1";
 
 const btnPrimary =
-  "px-6 py-3 bg-[#E73C6E] text-white font-medium rounded-md hover:opacity-90 disabled:opacity-60 w-full sm:w-auto";
+  "px-5 py-2.5 sm:py-3 bg-[#E73C6E] text-white text-sm font-medium rounded-md hover:opacity-90 disabled:opacity-60 w-full sm:w-auto";
 const btnSecondary =
   "px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-md hover:bg-gray-50 w-full sm:w-auto";
 
@@ -72,16 +72,12 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
   useEffect(() => {
     if (!checkoutActive || checkoutPhase === "idle") return;
     requestAnimationFrame(() => {
-      document.getElementById("painting-embedded-checkout")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      document.getElementById("painting-embedded-checkout")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     });
   }, [checkoutActive, checkoutPhase, checkoutClientSecret]);
 
   const scrollToFollowUp = useCallback(() => {
     document.getElementById("painting-follow-up")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, []);
-
-  const scrollTop = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   const submitDetails = async (e: React.FormEvent) => {
@@ -126,7 +122,7 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
         disclaimer: data.disclaimer,
       });
       setStep("quote");
-      scrollTop();
+      scrollToFollowUp();
     } catch {
       setError("Network error. Try again.");
     } finally {
@@ -281,7 +277,7 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
       )}
 
       {step === "quote" && (
-        <p className="mt-5 text-xs font-medium uppercase tracking-wide text-[#E73C6E]">Your quote</p>
+        <p className="mt-3 text-[10px] font-semibold uppercase tracking-wide text-[#E73C6E]">Your quote</p>
       )}
 
       {error ? (
@@ -422,65 +418,91 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
       )}
 
       {step === "quote" && quote && (
-        <div className="mt-6 space-y-6">
-          <div className="rounded-xl border border-gray-200 bg-gradient-to-b from-pink-50/80 to-white p-6 sm:p-8 shadow-sm">
-            <p className="text-sm font-semibold uppercase tracking-wide text-[#E73C6E]">Your planning range</p>
-            <p className="mt-3 text-3xl sm:text-4xl font-extrabold text-gray-900">
-              {quote.lowDisplay} – {quote.highDisplay}
-            </p>
-            <p className="mt-4 text-sm text-gray-600 leading-relaxed">{quote.disclaimer}</p>
-            <ul className="mt-4 space-y-2 text-sm text-gray-700 list-disc pl-5">
-              {quote.breakdown.map((line, i) => (
-                <li key={i}>{line}</li>
-              ))}
-            </ul>
-          </div>
+        <div
+          className={
+            checkoutActive
+              ? "mt-4 space-y-4 lg:grid lg:grid-cols-12 lg:items-start lg:gap-5 lg:space-y-0"
+              : "mt-4 space-y-3"
+          }
+        >
+          <div
+            className={
+              checkoutActive ? "space-y-3 lg:col-span-5 lg:sticky lg:top-3 lg:self-start" : "space-y-3"
+            }
+          >
+            <div className="rounded-lg border border-gray-200 bg-gradient-to-b from-pink-50/70 to-white p-4 shadow-sm">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-[#E73C6E]">Planning range</p>
+              <p className="mt-1 text-2xl font-extrabold leading-tight text-gray-900 sm:text-3xl">
+                {quote.lowDisplay} – {quote.highDisplay}
+              </p>
+              <p className="mt-2 line-clamp-2 text-xs leading-snug text-gray-600" title={quote.disclaimer}>
+                {quote.disclaimer}
+              </p>
+              <details className="mt-2 group">
+                <summary className="cursor-pointer list-none text-xs font-medium text-[#E73C6E] hover:underline [&::-webkit-details-marker]:hidden">
+                  <span className="inline group-open:hidden">View breakdown</span>
+                  <span className="hidden group-open:inline">Hide breakdown</span>
+                </summary>
+                <ul className="mt-2 space-y-1 border-t border-pink-100/80 pt-2 text-xs text-gray-600 [li]:marker:text-gray-300 list-disc pl-4">
+                  {quote.breakdown.map((line, i) => (
+                    <li key={i}>{line}</li>
+                  ))}
+                </ul>
+              </details>
+            </div>
 
-          <div className="rounded-xl border border-gray-200 bg-gray-50 p-6">
-            <h3 className="font-semibold text-lg text-gray-900">Schedule & materials deposit</h3>
-            <p className="mt-2 text-sm text-gray-600 leading-relaxed">
-              Your deposit is <strong>50% of the midpoint</strong> of the planning range above ({quote.depositDisplay}). It reserves your place on our schedule and lets us order paint and materials.
-            </p>
-            <p className="mt-3 text-sm text-gray-600 leading-relaxed">
-              When you&apos;re ready, tap the button — the secure payment form opens <strong>below on this same page</strong>. You&apos;ll review the agreement and pay with your card without leaving this screen.
-            </p>
+            <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+              <div className="flex flex-wrap items-end justify-between gap-2">
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-900">Deposit due today</h3>
+                  <p className="mt-0.5 text-lg font-bold text-gray-900">{quote.depositDisplay}</p>
+                  <p className="mt-1 max-w-sm text-[11px] leading-snug text-gray-600">
+                    50% of the midpoint — holds your spot &amp; materials. Pay below in one step.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => void payDeposit()}
+                disabled={payLoading || (checkoutPhase === "ready" && !!checkoutClientSecret)}
+                className={`mt-3 w-full ${btnPrimary}`}
+              >
+                {payLoading
+                  ? "Preparing checkout…"
+                  : checkoutPhase === "ready" && checkoutClientSecret
+                    ? "Complete payment →"
+                    : `Pay ${quote.depositDisplay} deposit`}
+              </button>
+            </div>
+
             <button
               type="button"
-              onClick={() => void payDeposit()}
-              disabled={payLoading || (checkoutPhase === "ready" && !!checkoutClientSecret)}
-              className={`mt-4 ${btnPrimary}`}
+              className="text-xs font-medium text-[#E73C6E] underline decoration-[#E73C6E]/40 hover:decoration-[#E73C6E]"
+              onClick={() => {
+                setCheckoutActive(false);
+                setCheckoutPhase("idle");
+                setCheckoutClientSecret(null);
+                setCheckoutErrMsg("");
+                setStep("details");
+                setDetailPage(3);
+                scrollToFollowUp();
+              }}
             >
-              {payLoading
-                ? "Preparing checkout…"
-                : checkoutPhase === "ready" && checkoutClientSecret
-                  ? "Complete payment below"
-                  : `Pay ${quote.depositDisplay} deposit`}
+              Adjust answers
             </button>
           </div>
 
-          <PaintingInlineCheckout
-            active={checkoutActive}
-            phase={checkoutPhase === "idle" ? "loading" : checkoutPhase}
-            clientSecret={checkoutClientSecret}
-            stripePromise={paintingStripePromise}
-            errorMessage={checkoutErrMsg}
-          />
-
-          <button
-            type="button"
-            className="text-sm text-[#E73C6E] font-medium underline"
-            onClick={() => {
-              setCheckoutActive(false);
-              setCheckoutPhase("idle");
-              setCheckoutClientSecret(null);
-              setCheckoutErrMsg("");
-              setStep("details");
-              setDetailPage(3);
-              scrollToFollowUp();
-            }}
-          >
-            Adjust answers
-          </button>
+          {checkoutActive ? (
+            <div className="lg:col-span-7">
+              <PaintingInlineCheckout
+                active
+                phase={checkoutPhase === "idle" ? "loading" : checkoutPhase}
+                clientSecret={checkoutClientSecret}
+                stripePromise={paintingStripePromise}
+                errorMessage={checkoutErrMsg}
+              />
+            </div>
+          ) : null}
         </div>
       )}
 
