@@ -6,13 +6,16 @@ export default async function ThankYouPage({
 }: {
   // This project’s Next.js PageProps expects `searchParams` to be a Promise.
   // `await` also works if Next passes a plain object at runtime.
-  searchParams?: Promise<{ status?: string; service?: string }>;
+  searchParams?: Promise<{ status?: string; service?: string; deposit?: string }>;
 }) {
   const sp = (searchParams ? await searchParams : undefined) ?? {};
   const service = String(sp.service || "").toLowerCase();
   const isCleaning = service === "cleaning";
   const status = String(sp.status || "").toLowerCase();
   const isOk = status === "ok";
+  const deposit = String(sp.deposit || "").toLowerCase();
+  const depositPaid = deposit === "paid";
+  const depositSimulated = deposit === "simulated";
   return (
     <main className="bg-white text-gray-900">
       {isCleaning && isOk && (
@@ -44,7 +47,17 @@ if (typeof gtag === 'function') {
           <p className="mt-4 text-lg text-gray-700 max-w-2xl mx-auto">
             A Sueep team member will reach out shortly to confirm details and timing.
           </p>
-          {service === "painting" && (
+          {service === "painting" && depositPaid && (
+            <p className="mt-3 text-sm text-gray-700 max-w-2xl mx-auto font-medium">
+              Your deposit was received — thank you. We&apos;ll confirm your scope and schedule shortly.
+            </p>
+          )}
+          {service === "painting" && depositSimulated && (
+            <p className="mt-3 text-sm text-amber-800 max-w-2xl mx-auto bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
+              Test mode: deposit was not charged. This confirmation is for local testing only.
+            </p>
+          )}
+          {service === "painting" && !depositPaid && !depositSimulated && (
             <p className="mt-3 text-sm text-gray-600 max-w-2xl mx-auto">
               Need flexibility? Ask us about financing options available through Acorn Finance.
             </p>
