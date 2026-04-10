@@ -1,6 +1,9 @@
 /** Browser session payload so /painting/next-steps can continue after thank-you redirect. */
 export const PAINTING_LEAD_STORAGE_KEY = "sueep_painting_lead_v1";
 
+/** Payload for /painting/checkout (embedded Stripe) — set right before navigating from the quote step. */
+export const PAINTING_CHECKOUT_STORAGE_KEY = "sueep_painting_checkout_v1";
+
 export type StoredPaintingLead = {
   name: string;
   email: string;

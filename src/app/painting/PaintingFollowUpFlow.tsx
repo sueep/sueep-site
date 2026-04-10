@@ -1,9 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import type { SqFtBand, PaintScope, CeilingScope, WallCondition, Occupancy, Timeline } from "@/lib/paintingQuote";
-import { parseStoredPaintingLead, PAINTING_LEAD_STORAGE_KEY, type StoredPaintingLead } from "@/lib/paintingLeadStorage";
+import {
+  parseStoredPaintingLead,
+  PAINTING_CHECKOUT_STORAGE_KEY,
+  PAINTING_LEAD_STORAGE_KEY,
+  type StoredPaintingLead,
+} from "@/lib/paintingLeadStorage";
 
 type MainStep = "details" | "quote";
 type DetailPage = 1 | 2 | 3;
@@ -33,6 +39,7 @@ type Props = {
 };
 
 export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) {
+  const router = useRouter();
   const [lead, setLead] = useState<StoredPaintingLead | null>(null);
   const [hydrated, setHydrated] = useState(false);
 
@@ -41,7 +48,6 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [payLoading, setPayLoading] = useState(false);
-  const [testModeDeposit, setTestModeDeposit] = useState(false);
 
   const [roomCount, setRoomCount] = useState(2);
   const [sqFtBand, setSqFtBand] = useState<SqFtBand>("1200_2000");
@@ -76,7 +82,6 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
     if (!lead) return;
     setError("");
     setLoading(true);
-    setTestModeDeposit(false);
     try {
       const res = await fetch("/api/painting/quote", {
         method: "POST",
@@ -122,15 +127,14 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
     }
   };
 
-  const payDeposit = async () => {
-    if (!lead) return;
+  const payDeposit = () => {
+    if (!lead || !quote) return;
     setError("");
     setPayLoading(true);
     try {
-      const res = await fetch("/api/painting/checkout", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
+      sessionStorage.setItem(
+        PAINTING_CHECKOUT_STORAGE_KEY,
+        JSON.stringify({
           name: lead.name,
           email: lead.email,
           phone: lead.phone,
@@ -143,24 +147,12 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
           wallCondition,
           occupancy,
           timeline,
+          depositDisplay: quote.depositDisplay,
         }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        setError(typeof data.error === "string" ? data.error : "Checkout could not start.");
-        setPayLoading(false);
-        return;
-      }
-      if (typeof data.url === "string" && data.url) {
-        window.location.href = data.url;
-        return;
-      }
-      if (data.testMode) {
-        setTestModeDeposit(true);
-        scrollTop();
-      }
+      );
+      router.push("/painting/checkout");
     } catch {
-      setError("Network error starting checkout.");
+      setError("Could not open checkout. Try again.");
     } finally {
       setPayLoading(false);
     }
@@ -410,27 +402,11 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
               Your deposit is <strong>50% of the midpoint</strong> of the planning range above ({quote.depositDisplay}). It reserves your place on our schedule and lets us order paint and materials.
             </p>
             <p className="mt-3 text-sm text-gray-600 leading-relaxed">
-              On the secure payment page, you&apos;ll read the customer agreement and check a box to accept it before you pay with your card.
+              Next you&apos;ll go to our checkout page on sueep.com: the same deposit terms in plain language, then Stripe&apos;s secure card form on that page. You&apos;ll accept the customer agreement there before paying.
             </p>
             <button type="button" onClick={payDeposit} disabled={payLoading} className={`mt-4 ${btnPrimary}`}>
-              {payLoading ? "Starting checkout…" : `Pay ${quote.depositDisplay} deposit`}
+              {payLoading ? "Opening checkout…" : `Pay ${quote.depositDisplay} deposit`}
             </button>
-
-            {testModeDeposit && (
-              <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
-                <p className="font-medium">Test mode</p>
-                <p className="mt-1">
-                  Stripe is not configured. Add <code className="text-xs bg-amber-100 px-1 rounded">STRIPE_SECRET_KEY</code> to{" "}
-                  <code className="text-xs bg-amber-100 px-1 rounded">.env.local</code> for real payments.
-                </p>
-                <a
-                  href="/thank-you?status=ok&service=painting&deposit=simulated"
-                  className="mt-3 inline-block px-4 py-2 bg-amber-800 text-white text-sm font-medium rounded-md hover:opacity-90"
-                >
-                  Simulate successful deposit (testing only)
-                </a>
-              </div>
-            )}
           </div>
 
           <button

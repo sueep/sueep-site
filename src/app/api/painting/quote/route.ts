@@ -128,7 +128,7 @@ async function notifyAfterQuote(input: PaintingQuoteInput, q: PaintingQuoteResul
         <p>Hi ${escapeHtml(lead.name.split(/\s+/)[0] || lead.name)},</p>
         <p>Thanks for the extra details — <strong>we're on it</strong> and a Sueep team member will follow up to confirm scope and scheduling.</p>
         <p>Based on what you shared, your <strong>planning range</strong> is about <strong>${escapeHtml(range)}</strong>. Final pricing is always confirmed after we review your property.</p>
-        <p>If you place a deposit on the next screen, it is 50% of the midpoint of this range — it secures scheduling and lets us order paint and materials. You&apos;ll accept the customer agreement on Stripe&apos;s checkout page before paying; final pricing is confirmed in writing before work begins.</p>
+        <p>If you place a deposit on the next screen, it is 50% of the midpoint of this range — it secures scheduling and lets us order paint and materials. You&apos;ll review the same terms on our sueep.com checkout page and accept the agreement in Stripe&apos;s secure form before paying; final pricing is confirmed in writing before work begins.</p>
         <p>— Sueep</p>
       </div>
     `;
