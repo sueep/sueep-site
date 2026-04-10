@@ -3,6 +3,10 @@ import { Resend } from "resend";
 
 const TO_EMAIL = process.env.CONTACT_TO_EMAIL || "contact@sueep.com";
 const FROM_EMAIL = process.env.RESEND_FROM || "Sueep Website <noreply@mail.sueep.com>";
+const FORMSUBMIT_ENDPOINT =
+  process.env.REFERRAL_FORMSUBMIT_ENDPOINT ||
+  process.env.FORMSUBMIT_ENDPOINT ||
+  "https://formsubmit.co/fc9c50165f29e01095f6f39726348f26";
 
 /**
  * POST /api/referrals
@@ -71,7 +75,43 @@ export async function POST(req: NextRequest) {
       </div>
     `;
 
-    if (process.env.RESEND_API_KEY) {
+    if (!process.env.RESEND_API_KEY) {
+      // Fallback so referrals still email contact@sueep.com when Resend isn't configured.
+      try {
+        const formPayload = new URLSearchParams();
+        formPayload.set("name", agentName);
+        formPayload.set("_replyto", agentContact);
+        formPayload.set("_subject", subject);
+        formPayload.set("_template", "table");
+        formPayload.set("_captcha", "false");
+        formPayload.set("_cc", TO_EMAIL);
+        formPayload.set(
+          "message",
+          [
+            `Agent name: ${agentName}`,
+            `Agent contact: ${agentContact}`,
+            `Client name: ${clientName}`,
+            `Property address: ${propertyAddress}`,
+            `Service type: ${serviceType}`,
+            "",
+            "Notes:",
+            notes || "—",
+          ].join("\n")
+        );
+
+        await fetch(FORMSUBMIT_ENDPOINT, {
+          method: "POST",
+          headers: { "content-type": "application/x-www-form-urlencoded" },
+          body: formPayload.toString(),
+        });
+      } catch (e) {
+        console.error("[api/referrals] FormSubmit fallback failed", e);
+        if (isFormPost) {
+          return NextResponse.redirect(new URL("/referral?submitted=0", req.url), { status: 303 });
+        }
+        return NextResponse.json({ error: "Fallback send failed" }, { status: 500 });
+      }
+    } else {
       const resend = new Resend(process.env.RESEND_API_KEY);
       await resend.emails.send({
         from: FROM_EMAIL,
@@ -79,13 +119,6 @@ export async function POST(req: NextRequest) {
         subject,
         html,
         reply_to: agentContact.includes("@") ? agentContact : undefined,
-      });
-    } else {
-      console.info("[api/referrals] RESEND_API_KEY not set; referral logged for dev:", {
-        agentName,
-        clientName,
-        propertyAddress,
-        serviceType,
       });
     }
 
