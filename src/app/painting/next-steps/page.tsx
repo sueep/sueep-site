@@ -23,14 +23,14 @@ export default function PaintingNextStepsPage() {
       <section className="max-w-3xl mx-auto px-5 py-10 md:py-14">
         <h1 className="text-2xl md:text-3xl font-bold uppercase tracking-wide text-gray-900">Painting estimate — next steps</h1>
         <p className="mt-2 text-gray-600 text-sm md:text-base">
-          You should arrive here right after the thank-you page. If you haven&apos;t submitted the form yet,{" "}
-          <Link href="/painting#estimate-form" className="text-[#E73C6E] font-medium underline">
-            start on the painting page
-          </Link>
-          .
+          Use this page if you skipped the questions on the thank-you screen. Submit the painting form first in this browser, then return here. Or{" "}
+          <Link href="/thank-you?status=ok&service=painting" className="text-[#E73C6E] font-medium underline">
+            open the thank-you page
+          </Link>{" "}
+          for the full flow.
         </p>
         <div className="mt-10">
-          <PaintingFollowUpFlow />
+          <PaintingFollowUpFlow variant="standalone" />
         </div>
       </section>
     </main>
