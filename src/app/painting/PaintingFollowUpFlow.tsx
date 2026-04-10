@@ -418,66 +418,25 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
       )}
 
       {step === "quote" && quote && (
-        <div
-          className={
-            checkoutActive
-              ? "mt-4 space-y-4 lg:grid lg:grid-cols-12 lg:items-start lg:gap-5 lg:space-y-0"
-              : "mt-4 space-y-3"
-          }
-        >
-          <div
-            className={
-              checkoutActive ? "space-y-3 lg:col-span-5 lg:sticky lg:top-3 lg:self-start" : "space-y-3"
-            }
-          >
+        <div className="mt-4 flex flex-col gap-4 lg:grid lg:grid-cols-12 lg:items-start lg:gap-6">
+          {/* Left: full quote breakdown — scrolls on desktop so payment stays in view */}
+          <div className="order-2 min-h-0 lg:order-1 lg:col-span-5 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-3 [scrollbar-gutter:stable]">
             <div className="rounded-lg border border-gray-200 bg-gradient-to-b from-pink-50/70 to-white p-4 shadow-sm">
               <p className="text-[11px] font-semibold uppercase tracking-wide text-[#E73C6E]">Planning range</p>
               <p className="mt-1 text-2xl font-extrabold leading-tight text-gray-900 sm:text-3xl">
                 {quote.lowDisplay} – {quote.highDisplay}
               </p>
-              <p className="mt-2 line-clamp-2 text-xs leading-snug text-gray-600" title={quote.disclaimer}>
-                {quote.disclaimer}
-              </p>
-              <details className="mt-2 group">
-                <summary className="cursor-pointer list-none text-xs font-medium text-[#E73C6E] hover:underline [&::-webkit-details-marker]:hidden">
-                  <span className="inline group-open:hidden">View breakdown</span>
-                  <span className="hidden group-open:inline">Hide breakdown</span>
-                </summary>
-                <ul className="mt-2 space-y-1 border-t border-pink-100/80 pt-2 text-xs text-gray-600 [li]:marker:text-gray-300 list-disc pl-4">
-                  {quote.breakdown.map((line, i) => (
-                    <li key={i}>{line}</li>
-                  ))}
-                </ul>
-              </details>
+              <p className="mt-3 text-xs leading-relaxed text-gray-600">{quote.disclaimer}</p>
+              <p className="mt-4 text-[11px] font-semibold uppercase tracking-wide text-gray-500">Line-by-line breakdown</p>
+              <ul className="mt-2 space-y-2 text-xs leading-snug text-gray-700 list-disc pl-4 marker:text-gray-300">
+                {quote.breakdown.map((line, i) => (
+                  <li key={i}>{line}</li>
+                ))}
+              </ul>
             </div>
-
-            <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
-              <div className="flex flex-wrap items-end justify-between gap-2">
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-900">Deposit due today</h3>
-                  <p className="mt-0.5 text-lg font-bold text-gray-900">{quote.depositDisplay}</p>
-                  <p className="mt-1 max-w-sm text-[11px] leading-snug text-gray-600">
-                    50% of the midpoint — holds your spot &amp; materials. Pay below in one step.
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => void payDeposit()}
-                disabled={payLoading || (checkoutPhase === "ready" && !!checkoutClientSecret)}
-                className={`mt-3 w-full ${btnPrimary}`}
-              >
-                {payLoading
-                  ? "Preparing checkout…"
-                  : checkoutPhase === "ready" && checkoutClientSecret
-                    ? "Complete payment →"
-                    : `Pay ${quote.depositDisplay} deposit`}
-              </button>
-            </div>
-
             <button
               type="button"
-              className="text-xs font-medium text-[#E73C6E] underline decoration-[#E73C6E]/40 hover:decoration-[#E73C6E]"
+              className="mt-4 text-xs font-medium text-[#E73C6E] underline decoration-[#E73C6E]/40 hover:decoration-[#E73C6E]"
               onClick={() => {
                 setCheckoutActive(false);
                 setCheckoutPhase("idle");
@@ -492,8 +451,29 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
             </button>
           </div>
 
-          {checkoutActive ? (
-            <div className="lg:col-span-7">
+          {/* Right: sticky payment rail — stays put while left column scrolls */}
+          <div className="order-1 space-y-3 lg:order-2 lg:col-span-7 lg:sticky lg:top-4 lg:self-start">
+            <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 shadow-sm">
+              <h3 className="text-sm font-semibold text-gray-900">Deposit due today</h3>
+              <p className="mt-0.5 text-xl font-bold text-gray-900">{quote.depositDisplay}</p>
+              <p className="mt-2 text-[11px] leading-snug text-gray-600">
+                50% of the planning midpoint — holds your slot &amp; materials. Card form appears here after you tap pay.
+              </p>
+              <button
+                type="button"
+                onClick={() => void payDeposit()}
+                disabled={payLoading || (checkoutPhase === "ready" && !!checkoutClientSecret)}
+                className={`mt-3 w-full ${btnPrimary}`}
+              >
+                {payLoading
+                  ? "Preparing checkout…"
+                  : checkoutPhase === "ready" && checkoutClientSecret
+                    ? "Complete payment →"
+                    : `Pay ${quote.depositDisplay} deposit`}
+              </button>
+            </div>
+
+            {checkoutActive ? (
               <PaintingInlineCheckout
                 active
                 phase={checkoutPhase === "idle" ? "loading" : checkoutPhase}
@@ -501,8 +481,12 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
                 stripePromise={paintingStripePromise}
                 errorMessage={checkoutErrMsg}
               />
-            </div>
-          ) : null}
+            ) : (
+              <p className="hidden text-center text-[11px] text-gray-400 lg:block">
+                Scroll the breakdown on the left anytime — pay stays on this side.
+              </p>
+            )}
+          </div>
         </div>
       )}
 
