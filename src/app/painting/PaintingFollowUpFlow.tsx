@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import PaintingInlineCheckout, { type InlineCheckoutPhase } from "@/app/painting/PaintingInlineCheckout";
+import { PaintingQuoteTrustLeft, PaintingQuoteTrustRight } from "@/app/painting/PaintingQuoteTrustBlocks";
 import { paintingStripePromise } from "@/lib/stripePublishableClient";
 import type { SqFtBand, PaintScope, CeilingScope, WallCondition, Occupancy, Timeline } from "@/lib/paintingQuote";
 import { parseStoredPaintingLead, PAINTING_LEAD_STORAGE_KEY, type StoredPaintingLead } from "@/lib/paintingLeadStorage";
@@ -434,6 +435,7 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
                 ))}
               </ul>
             </div>
+            <PaintingQuoteTrustLeft />
             <button
               type="button"
               className="mt-4 text-xs font-medium text-[#E73C6E] underline decoration-[#E73C6E]/40 hover:decoration-[#E73C6E]"
@@ -472,6 +474,8 @@ export default function PaintingFollowUpFlow({ variant = "standalone" }: Props) 
                     : `Pay ${quote.depositDisplay} deposit`}
               </button>
             </div>
+
+            <PaintingQuoteTrustRight />
 
             {checkoutActive ? (
               <PaintingInlineCheckout
