@@ -8,6 +8,8 @@
  * Stages (your naming):
  * - Commercial: Quote approved = awarded, Work in progress, Work completed
  * - Residential: Confirmed (= awarded), WIP, Work completed
+ * - Janitorial: Omit `workCompleted` (empty string) to sync only active stages (e.g. Awarded + Signed as WIP);
+ *   deals that leave those stages are marked COMPLETE on the next sync.
  *
  * Set `HUBSPOT_PIPELINE_STAGE_MAP` in Vercel to a JSON string (see `.env.example`).
  * Get IDs: HubSpot → Settings → Data Management → Objects → Deals → Pipelines,
@@ -51,11 +53,16 @@ export function classifyHubSpotDealStage(
   const cfg = parseHubSpotPipelineStageMap();
   if (!cfg) return null;
 
+  const matches = (configured: string) => {
+    const c = configured?.trim();
+    return Boolean(c) && dealStageId === c;
+  };
+
   if (pipelineId === cfg.residential.pipelineId) {
     const { confirmed, workInProgress, workCompleted } = cfg.residential.stages;
-    if (dealStageId === confirmed) return { segment: "RESIDENTIAL", phase: "AWARDED" };
-    if (dealStageId === workInProgress) return { segment: "RESIDENTIAL", phase: "WIP" };
-    if (dealStageId === workCompleted) return { segment: "RESIDENTIAL", phase: "COMPLETED" };
+    if (matches(confirmed)) return { segment: "RESIDENTIAL", phase: "AWARDED" };
+    if (matches(workInProgress)) return { segment: "RESIDENTIAL", phase: "WIP" };
+    if (matches(workCompleted)) return { segment: "RESIDENTIAL", phase: "COMPLETED" };
     return { segment: "RESIDENTIAL", phase: "OTHER" };
   }
 
@@ -63,9 +70,9 @@ export function classifyHubSpotDealStage(
   for (const p of commercialPipelines) {
     if (pipelineId !== p.pipelineId) continue;
     const { quoteApproved, workInProgress, workCompleted } = p.stages;
-    if (dealStageId === quoteApproved) return { segment: "COMMERCIAL", phase: "AWARDED" };
-    if (dealStageId === workInProgress) return { segment: "COMMERCIAL", phase: "WIP" };
-    if (dealStageId === workCompleted) return { segment: "COMMERCIAL", phase: "COMPLETED" };
+    if (matches(quoteApproved)) return { segment: "COMMERCIAL", phase: "AWARDED" };
+    if (matches(workInProgress)) return { segment: "COMMERCIAL", phase: "WIP" };
+    if (matches(workCompleted)) return { segment: "COMMERCIAL", phase: "COMPLETED" };
     return { segment: "COMMERCIAL", phase: "OTHER" };
   }
 

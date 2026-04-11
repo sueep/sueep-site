@@ -5,7 +5,10 @@ import { parseHubSpotPipelineStageMap } from "@/lib/hubspot/pipelineStages";
 function collectAllDealStageIds(cfg: HubSpotPipelineStageMap): string[] {
   const ids = new Set<string>();
   const add = (s: Record<string, string>) => {
-    Object.values(s).forEach((id) => ids.add(id));
+    for (const id of Object.values(s)) {
+      const t = id?.trim();
+      if (t) ids.add(t);
+    }
   };
   add(cfg.postConstruction.stages);
   add(cfg.janitorial.stages);

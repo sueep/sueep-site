@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { HubSpotSyncPanel } from "./HubSpotSyncPanel";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -40,6 +41,8 @@ export default async function ErpDashboardPage() {
         <h1 className="text-2xl font-semibold text-white">Dashboard</h1>
         <p className="mt-1 text-sm text-zinc-400">Internal ERP — projects, labor, and cost baselines.</p>
       </div>
+
+      <HubSpotSyncPanel id="hubspot-sync" />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[

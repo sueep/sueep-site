@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import {
   classifyHubSpotDealStage,
   erpStatusFromPhase,
+  parseHubSpotPipelineStageMap,
+  shouldSyncDealToErp,
   type DealLifecyclePhase,
 } from "@/lib/hubspot/pipelineStages";
 import { searchDealsInConfiguredStages, type HubSpotDealRecord } from "@/lib/hubspot/dealSearch";
@@ -29,8 +31,14 @@ export type SyncDealResult = {
  * Pull deals from HubSpot (configured pipelines/stages) and upsert `Project` rows
  * so they appear on the schedule / Gantt.
  */
-export async function syncHubSpotDealsToProjects(): Promise<{ synced: SyncDealResult[]; errors: string[] }> {
+export async function syncHubSpotDealsToProjects(): Promise<{
+  synced: SyncDealResult[];
+  errors: string[];
+  reconciledJanitorial?: Array<{ hubspotDealId: string; projectId: string }>;
+}> {
   const deals = await searchDealsInConfiguredStages(200);
+  const cfg = parseHubSpotPipelineStageMap();
+  const seenDealIds = new Set(deals.map((d) => d.id));
   const synced: SyncDealResult[] = [];
   const errors: string[] = [];
 
@@ -54,6 +62,10 @@ export async function syncHubSpotDealsToProjects(): Promise<{ synced: SyncDealRe
 
     try {
       const existing = await prisma.project.findUnique({ where: { hubspotDealId: deal.id } });
+
+      if (!shouldSyncDealToErp(phase) && !existing) {
+        continue;
+      }
       const projectDate = parseHubSpotDate(closeRaw);
 
       if (existing) {
@@ -102,5 +114,32 @@ export async function syncHubSpotDealsToProjects(): Promise<{ synced: SyncDealRe
     }
   }
 
-  return { synced, errors };
+  const reconciledJanitorial: Array<{ hubspotDealId: string; projectId: string }> = [];
+  const janitorialId = cfg?.janitorial.pipelineId;
+  const janitorialNoCompleted = cfg && !cfg.janitorial.stages.workCompleted?.trim();
+  if (janitorialId && janitorialNoCompleted) {
+    const orphans = await prisma.project.findMany({
+      where: {
+        hubspotPipelineId: janitorialId,
+        hubspotDealId: { not: null },
+        status: "ACTIVE",
+      },
+      select: { id: true, hubspotDealId: true },
+    });
+    for (const row of orphans) {
+      const hid = row.hubspotDealId;
+      if (!hid || seenDealIds.has(hid)) continue;
+      await prisma.project.update({
+        where: { id: row.id },
+        data: { status: "COMPLETE" },
+      });
+      reconciledJanitorial.push({ hubspotDealId: hid, projectId: row.id });
+    }
+  }
+
+  return {
+    synced,
+    errors,
+    ...(reconciledJanitorial.length > 0 ? { reconciledJanitorial } : {}),
+  };
 }

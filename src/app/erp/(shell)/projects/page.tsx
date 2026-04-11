@@ -45,6 +45,10 @@ export default async function ErpProjectsPage() {
                   No projects yet.{" "}
                   <Link href="/erp/projects/new" className="text-pink-400 hover:underline">
                     Create one
+                  </Link>{" "}
+                  or import from HubSpot under{" "}
+                  <Link href="/erp/hubspot" className="text-pink-400 hover:underline">
+                    HubSpot sync
                   </Link>
                   .
                 </td>

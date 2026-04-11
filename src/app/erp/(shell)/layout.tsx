@@ -7,6 +7,7 @@ export const maxDuration = 60;
 
 const nav = [
   { href: "/erp", label: "Dashboard" },
+  { href: "/erp/hubspot", label: "HubSpot sync" },
   { href: "/erp/schedule", label: "Schedule" },
   { href: "/erp/projects", label: "Projects" },
   { href: "/erp/projects/new", label: "New project" },
