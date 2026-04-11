@@ -1,12 +1,12 @@
-// Sueep internal ERP — SQLite locally; swap provider + url for Postgres when deploying.
-// Money fields are integer cents. Hours are Float (SQLite-friendly).
+// Sueep internal ERP — PostgreSQL in production (Vercel/Neon). Local: Docker Postgres or Neon dev branch.
+// Money fields are integer cents.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 

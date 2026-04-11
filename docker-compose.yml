@@ -1,0 +1,16 @@
+# Local ERP database only. Run: docker compose up -d
+# Then set DATABASE_URL=postgresql://postgres:postgres@localhost:5432/sueep_erp in .env.local
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: sueep_erp
+    ports:
+      - "5432:5432"
+    volumes:
+      - sueep_erp_pgdata:/var/lib/postgresql/data
+
+volumes:
+  sueep_erp_pgdata:

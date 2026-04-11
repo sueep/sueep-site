@@ -25,16 +25,15 @@ export default function ErpLoginPage() {
             ERP auth is not configured on this deployment. In the Vercel project → Settings → Environment Variables,
             add <code className="text-amber-50">ERP_ACCESS_PASSWORD</code> and{" "}
             <code className="text-amber-50">ERP_SESSION_SECRET</code> (min 16 characters), then redeploy. For data
-            storage, set <code className="text-amber-50">DATABASE_URL</code> to a hosted database (SQLite file storage
-            does not work on Vercel serverless).
+            storage, set <code className="text-amber-50">DATABASE_URL</code> to PostgreSQL (e.g. Neon) — see{" "}
+            <code className="text-amber-50">.env.example</code>.
           </div>
         ) : null}
         <ErpLoginForm />
         <p className="mt-6 text-center text-[10px] text-zinc-600">
-          Local: set <code className="text-zinc-400">DATABASE_URL</code>,{" "}
-          <code className="text-zinc-400">ERP_SESSION_SECRET</code>,{" "}
-          <code className="text-zinc-400">ERP_ACCESS_PASSWORD</code> in{" "}
-          <code className="text-zinc-400">.env.local</code> — see <code className="text-zinc-400">.env.example</code>.
+          Local: PostgreSQL <code className="text-zinc-400">DATABASE_URL</code> (see <code className="text-zinc-400">docker-compose.yml</code>), plus{" "}
+          <code className="text-zinc-400">ERP_SESSION_SECRET</code> and <code className="text-zinc-400">ERP_ACCESS_PASSWORD</code> in{" "}
+          <code className="text-zinc-400">.env.local</code> — <code className="text-zinc-400">.env.example</code>.
         </p>
         <p className="mt-4 text-center text-[10px] text-zinc-600">
           <a href={MARKETING_SITE_URL} className="text-pink-400 hover:underline">
