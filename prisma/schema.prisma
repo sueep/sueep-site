@@ -49,6 +49,11 @@ model Project {
 
   laborEntries LaborEntry[]
 
+  /// HubSpot Deal record id (sync from CRM). One ERP project per deal until multi-job-per-deal is modeled.
+  hubspotDealId     String? @unique
+  hubspotPipelineId String?
+  hubspotStageId    String?
+
   @@index([segment])
   @@index([status])
   @@index([projectDate])
