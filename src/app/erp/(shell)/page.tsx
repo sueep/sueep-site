@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 export default async function ErpDashboardPage() {
   let projectCount: number;
@@ -18,8 +19,8 @@ export default async function ErpDashboardPage() {
       prisma.laborEntry.count(),
       prisma.project.count({ where: { status: "ACTIVE" } }),
     ]);
-  } catch (e) {
-    const msg = e instanceof Error ? e.message : "Database error";
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : String(e);
     return (
       <div className="space-y-4 rounded-lg border border-red-900/60 bg-red-950/40 p-6 text-sm text-red-100">
         <h1 className="text-lg font-semibold text-white">ERP database unavailable</h1>

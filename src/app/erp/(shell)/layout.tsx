@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { ErpLogoutButton } from "./ErpLogoutButton";
 
+/** Neon cold start / Prisma can exceed default on first request after idle. */
+export const maxDuration = 60;
+
 const nav = [
   { href: "/erp", label: "Dashboard" },
   { href: "/erp/projects", label: "Projects" },
