@@ -1,0 +1,50 @@
+import Link from "next/link";
+import { prisma } from "@/lib/prisma";
+
+export const dynamic = "force-dynamic";
+
+export default async function ErpDashboardPage() {
+  const [projectCount, commercialCount, residentialCount, laborCount, activeCount] = await Promise.all([
+    prisma.project.count(),
+    prisma.project.count({ where: { segment: "COMMERCIAL" } }),
+    prisma.project.count({ where: { segment: "RESIDENTIAL" } }),
+    prisma.laborEntry.count(),
+    prisma.project.count({ where: { status: "ACTIVE" } }),
+  ]);
+
+  return (
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-2xl font-semibold text-white">Dashboard</h1>
+        <p className="mt-1 text-sm text-zinc-400">Internal ERP — projects, labor, and cost baselines.</p>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          { label: "Active projects", value: activeCount },
+          { label: "All projects", value: projectCount },
+          { label: "Labor entries", value: laborCount },
+          { label: "Commercial / Residential", value: `${commercialCount} / ${residentialCount}` },
+        ].map((card) => (
+          <div key={card.label} className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-4">
+            <p className="text-xs uppercase tracking-wide text-zinc-500">{card.label}</p>
+            <p className="mt-2 text-2xl font-bold text-white">{card.value}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="rounded-lg border border-zinc-800 bg-zinc-900/30 p-4 text-sm text-zinc-400">
+        <p className="font-medium text-zinc-300">Next steps for the product</p>
+        <ul className="mt-2 list-inside list-disc space-y-1 text-xs">
+          <li>Add invoicing line items, materials receipts, and Gantt-style milestones.</li>
+          <li>Swap SQLite for Postgres on Vercel / Neon when you deploy.</li>
+          <li>Point DNS <code className="text-pink-400">app.sueep.com</code> at this deployment — middleware rewrites to{" "}
+            <code className="text-zinc-500">/erp</code>.</li>
+        </ul>
+        <Link href="/erp/projects" className="mt-4 inline-block text-sm font-medium text-pink-400 hover:underline">
+          Go to projects →
+        </Link>
+      </div>
+    </div>
+  );
+}

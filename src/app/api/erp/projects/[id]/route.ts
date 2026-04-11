@@ -1,0 +1,101 @@
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { inputToCents } from "@/lib/erp/money";
+
+const SEGMENTS = ["COMMERCIAL", "RESIDENTIAL"] as const;
+const STATUSES = ["ACTIVE", "ON_HOLD", "COMPLETE", "ARCHIVED"] as const;
+
+type Ctx = { params: Promise<{ id: string }> };
+
+export async function GET(_req: Request, ctx: Ctx) {
+  const { id } = await ctx.params;
+  const project = await prisma.project.findUnique({
+    where: { id },
+    include: {
+      laborEntries: { orderBy: { workDate: "desc" } },
+    },
+  });
+  if (!project) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  return NextResponse.json(project);
+}
+
+export async function PATCH(req: Request, ctx: Ctx) {
+  const { id } = await ctx.params;
+  let body: Record<string, unknown>;
+  try {
+    body = (await req.json()) as Record<string, unknown>;
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
+  const existing = await prisma.project.findUnique({ where: { id } });
+  if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  const pct = (v: unknown) => {
+    if (v === undefined) return undefined;
+    const n = typeof v === "number" ? v : Number(v);
+    if (!Number.isFinite(n)) return undefined;
+    return Math.min(100, Math.max(0, n));
+  };
+
+  const cents = (v: unknown) => {
+    if (v === undefined) return undefined;
+    if (v === null || v === "") return null;
+    return inputToCents(v);
+  };
+
+  const data: Record<string, unknown> = {};
+
+  if (body.jobTitle !== undefined) data.jobTitle = String(body.jobTitle || "").trim() || existing.jobTitle;
+  if (body.supervisor !== undefined) data.supervisor = body.supervisor ? String(body.supervisor).trim() : null;
+  if (body.description !== undefined) data.description = body.description ? String(body.description).trim() : null;
+  if (body.projectDate !== undefined) {
+    data.projectDate =
+      body.projectDate === null || body.projectDate === ""
+        ? null
+        : new Date(String(body.projectDate));
+  }
+  if (body.percentDone !== undefined) data.percentDone = pct(body.percentDone) ?? 0;
+  if (body.percentInvoiced !== undefined) data.percentInvoiced = pct(body.percentInvoiced) ?? 0;
+  if (body.segment !== undefined) {
+    const s = String(body.segment).toUpperCase();
+    if (SEGMENTS.includes(s as (typeof SEGMENTS)[number])) data.segment = s;
+  }
+  if (body.status !== undefined) {
+    const s = String(body.status).toUpperCase();
+    if (STATUSES.includes(s as (typeof STATUSES)[number])) data.status = s;
+  }
+
+  if (body.contractValue !== undefined) data.contractValueCents = cents(body.contractValue);
+  if (body.estMaterial !== undefined) data.estMaterialCents = cents(body.estMaterial);
+  if (body.estTravel !== undefined) data.estTravelCents = cents(body.estTravel);
+  if (body.estLabor !== undefined) data.estLaborCents = cents(body.estLabor);
+  if (body.actualLabor !== undefined) data.actualLaborCents = cents(body.actualLabor);
+  if (body.actualMaterial !== undefined) data.actualMaterialCents = cents(body.actualMaterial);
+  if (body.estHours !== undefined) {
+    data.estHours =
+      body.estHours === null || body.estHours === "" ? null : Number(body.estHours);
+  }
+  if (body.actualHours !== undefined) {
+    data.actualHours =
+      body.actualHours === null || body.actualHours === "" ? null : Number(body.actualHours);
+  }
+
+  try {
+    const project = await prisma.project.update({ where: { id }, data: data as object });
+    return NextResponse.json(project);
+  } catch (e) {
+    console.error("PATCH /api/erp/projects/[id]", e);
+    return NextResponse.json({ error: "Update failed" }, { status: 500 });
+  }
+}
+
+export async function DELETE(_req: Request, ctx: Ctx) {
+  const { id } = await ctx.params;
+  try {
+    await prisma.project.delete({ where: { id } });
+    return NextResponse.json({ ok: true });
+  } catch {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+}

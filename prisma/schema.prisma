@@ -1,0 +1,72 @@
+// Sueep internal ERP — SQLite locally; swap provider + url for Postgres when deploying.
+// Money fields are integer cents. Hours are Float (SQLite-friendly).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  /// COMMERCIAL | RESIDENTIAL
+  segment String @default("COMMERCIAL")
+  /// ACTIVE | ON_HOLD | COMPLETE | ARCHIVED
+  status  String @default("ACTIVE")
+
+  /// Primary / job-start date shown on PM dashboard
+  projectDate DateTime?
+
+  jobTitle    String
+  supervisor  String?
+  description String?
+
+  percentDone     Float @default(0)
+  percentInvoiced Float @default(0)
+
+  contractValueCents Int?
+
+  estMaterialCents Int?
+  estTravelCents   Int?
+  estLaborCents    Int?
+
+  actualLaborCents    Int?
+  actualMaterialCents Int?
+
+  estHours    Float?
+  actualHours Float?
+
+  laborEntries LaborEntry[]
+
+  @@index([segment])
+  @@index([status])
+  @@index([projectDate])
+}
+
+model LaborEntry {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  workDate DateTime
+
+  workerName String
+  role       String?
+  hours      Float
+  /// Cents per hour (e.g. $28.84/hr → 2884)
+  hourlyRateCents Int
+
+  taskDescription String?
+
+  @@index([projectId])
+  @@index([workDate])
+}
