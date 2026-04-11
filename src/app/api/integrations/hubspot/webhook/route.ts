@@ -51,6 +51,7 @@ export async function POST(request: Request) {
 export async function GET() {
   return NextResponse.json({
     ok: true,
-    message: "HubSpot webhook endpoint. Configure POST in private app → Webhooks.",
+    message:
+      "HubSpot webhook endpoint (GET = health check). HubSpot sends CRM events via POST with a signed body.",
   });
 }
