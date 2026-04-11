@@ -23,7 +23,12 @@ export function ErpLoginForm() {
         setLoading(false);
         return;
       }
-      window.location.href = "/erp";
+      // On app.sueep.com, `/` is the ERP home (middleware rewrites to /erp). Else use /erp on the main site.
+      const { hostname } = window.location;
+      const appHost =
+        hostname === "app.sueep.com" ||
+        (process.env.NODE_ENV === "development" && hostname.startsWith("app.localhost"));
+      window.location.href = appHost ? "/" : "/erp";
     } catch {
       setError("Network error");
     } finally {

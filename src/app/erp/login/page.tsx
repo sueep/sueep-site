@@ -1,5 +1,6 @@
-import Link from "next/link";
 import { ErpLoginForm } from "./ErpLoginForm";
+
+const MARKETING_SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https://sueep.com";
 
 export default function ErpLoginPage() {
   return (
@@ -15,9 +16,9 @@ export default function ErpLoginPage() {
           <code className="text-zinc-400">.env.local</code> — see <code className="text-zinc-400">.env.example</code>.
         </p>
         <p className="mt-4 text-center text-[10px] text-zinc-600">
-          <Link href="/" className="text-pink-400 hover:underline">
+          <a href={MARKETING_SITE_URL} className="text-pink-400 hover:underline">
             ← Public site
-          </Link>
+          </a>
         </p>
       </div>
     </div>
