@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import PaintingInlineCheckout, { type InlineCheckoutPhase } from "@/app/painting/PaintingInlineCheckout";
-import { PaintingQuoteTrustLeft, PaintingQuoteTrustRight } from "@/app/painting/PaintingQuoteTrustBlocks";
+import PaintingInlineCheckout, { type InlineCheckoutPhase } from "@/app/(marketing)/painting/PaintingInlineCheckout";
+import { PaintingQuoteTrustLeft, PaintingQuoteTrustRight } from "@/app/(marketing)/painting/PaintingQuoteTrustBlocks";
 import { paintingStripePromise } from "@/lib/stripePublishableClient";
 import type { SqFtBand, PaintScope, CeilingScope, WallCondition, Occupancy, Timeline } from "@/lib/paintingQuote";
 import { parseStoredPaintingLead, PAINTING_LEAD_STORAGE_KEY, type StoredPaintingLead } from "@/lib/paintingLeadStorage";

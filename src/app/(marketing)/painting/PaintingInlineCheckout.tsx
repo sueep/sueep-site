@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { EmbeddedCheckout, EmbeddedCheckoutProvider } from "@stripe/react-stripe-js";
-import PaintingDepositTermsCompact from "@/app/painting/PaintingDepositTermsCompact";
+import PaintingDepositTermsCompact from "@/app/(marketing)/painting/PaintingDepositTermsCompact";
 
 export type InlineCheckoutPhase = "loading" | "ready" | "test" | "no_pk" | "error";
 

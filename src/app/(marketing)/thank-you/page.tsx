@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Script from "next/script";
-import PaintingFollowUpFlow from "@/app/painting/PaintingFollowUpFlow";
+import PaintingFollowUpFlow from "@/app/(marketing)/painting/PaintingFollowUpFlow";
 
 export default async function ThankYouPage({
   searchParams,

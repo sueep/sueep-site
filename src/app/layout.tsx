@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,30 +12,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+/** Minimal defaults; public SEO lives in `(marketing)/layout.tsx`, ERP in `erp/layout.tsx`. */
 export const metadata: Metadata = {
-  title: "Sueep — Commercial Cleaning for Construction & Properties",
-  description: "Commercial cleaning that keeps projects turnover‑ready: final cleans, unit turns, and janitorial programs across PA, NJ, and NY.",
-  icons: {
-    icon: [
-      { url: "/sueepicon.jpeg?v=2", sizes: "32x32" },
-      { url: "/sueepicon.jpeg?v=2", sizes: "16x16" },
-    ],
-    shortcut: "/sueepicon.jpeg?v=2",
-    apple: "/sueepicon.jpeg?v=2",
-    other: [
-      // Safari pinned tab (will be ignored if not found)
-      { rel: "mask-icon", url: "/safari-pinned-tab.svg", color: "#E73C6E" },
-    ],
-  },
-  openGraph: {
-    title: "Sueep — Commercial Cleaning for Construction & Properties",
-    description: "Turnover‑ready final cleans, rapid unit turnovers, and janitorial programs across PA, NJ, and NY.",
-  },
-  twitter: {
-    card: "summary",
-    title: "Sueep — Commercial Cleaning for Construction & Properties",
-    description: "Final cleans, unit turns, and janitorial programs delivered on schedule across PA, NJ, and NY.",
-  },
+  title: { default: "Sueep", template: "%s | Sueep" },
 };
 
 export default function RootLayout({
@@ -46,64 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        {/* Google Tag Manager */}
-        <Script id="gtm" strategy="afterInteractive">
-          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-53QSN796');`}
-        </Script>
-        {/* End Google Tag Manager */}
-        {/* HubSpot Chat init - ensure immediate load in dev */}
-        <Script id="hs-init" strategy="beforeInteractive">
-          {`window.hsConversationsSettings = window.hsConversationsSettings || {};
-window.hsConversationsSettings.loadImmediately = true;`}
-        </Script>
-        {/* HubSpot Chat */}
-        <Script
-          id="hs-script-loader"
-          strategy="afterInteractive"
-          src="https://js.hs-scripts.com/6686745.js"
-        />
-        {/* End HubSpot Chat */}
-      </head>
-      <body
-        suppressHydrationWarning
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {process.env.NODE_ENV === "development" ? (
-          <Script id="suppress-hydration-warning-overlay" strategy="afterInteractive">
-            {`
-              (function () {
-                try {
-                  var originalError = console.error;
-                  console.error = function () {
-                    var args = Array.prototype.slice.call(arguments);
-                    var msg = args && args[0];
-                    var isHydrationAttrMismatch =
-                      typeof msg === 'string' &&
-                      (msg.indexOf("A tree hydrated but some attributes of the server rendered HTML didn't match the client properties") !== -1 ||
-                       msg.indexOf('Hydration failed because the initial UI does not match what was rendered on the server') !== -1);
-                    if (isHydrationAttrMismatch) return;
-                    return originalError.apply(console, args);
-                  };
-                } catch (e) {}
-              })();
-            `}
-          </Script>
-        ) : null}
-        {/* Google Tag Manager (noscript) */}
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-53QSN796"
-            height="0"
-            width="0"
-            style={{ display: "none", visibility: "hidden" }}
-          ></iframe>
-        </noscript>
-        {/* End Google Tag Manager (noscript) */}
+      <body suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
       </body>
     </html>

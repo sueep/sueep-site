@@ -1,5 +1,5 @@
 import Link from "next/link";
-import PaintingDepositTerms from "@/app/painting/PaintingDepositTerms";
+import PaintingDepositTerms from "@/app/(marketing)/painting/PaintingDepositTerms";
 
 export const metadata = {
   title: "Residential painting customer agreement | Sueep",

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { EmbeddedCheckout, EmbeddedCheckoutProvider } from "@stripe/react-stripe-js";
-import PaintingDepositTerms from "@/app/painting/PaintingDepositTerms";
+import PaintingDepositTerms from "@/app/(marketing)/painting/PaintingDepositTerms";
 import { PAINTING_CHECKOUT_STORAGE_KEY } from "@/lib/paintingLeadStorage";
 import { paintingStripePromise } from "@/lib/stripePublishableClient";
 
