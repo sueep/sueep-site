@@ -47,6 +47,13 @@ export async function POST(req: Request) {
         ? null
         : null;
 
+  const projectEndDate =
+    typeof body.projectEndDate === "string" && body.projectEndDate
+      ? new Date(body.projectEndDate)
+      : body.projectEndDate === null || body.projectEndDate === ""
+        ? null
+        : null;
+
   const num = (v: unknown) => (typeof v === "number" && Number.isFinite(v) ? v : typeof v === "string" ? Number(v) : NaN);
   const pct = (v: unknown) => {
     const n = num(v);
@@ -61,6 +68,7 @@ export async function POST(req: Request) {
         supervisor: body.supervisor != null ? String(body.supervisor).trim() || null : null,
         description: body.description != null ? String(body.description).trim() || null : null,
         projectDate,
+        projectEndDate,
         percentDone: pct(body.percentDone) ?? 0,
         percentInvoiced: pct(body.percentInvoiced) ?? 0,
         contractValueCents: inputToCents(body.contractValue) ?? undefined,

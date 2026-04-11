@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { centsToDollars } from "@/lib/erp/money";
+import { ProjectDatesEditor } from "./ProjectDatesEditor";
 import { ProjectLaborSection } from "./ProjectLaborSection";
 
 export const dynamic = "force-dynamic";
@@ -30,7 +31,8 @@ export default async function ProjectDetailPage({ params }: PageProps) {
     { k: "Segment", v: project.segment },
     { k: "Status", v: project.status },
     { k: "Supervisor", v: project.supervisor || "—" },
-    { k: "Project date", v: project.projectDate ? project.projectDate.toLocaleDateString() : "—" },
+    { k: "Start date", v: project.projectDate ? project.projectDate.toLocaleDateString() : "—" },
+    { k: "Target end", v: project.projectEndDate ? project.projectEndDate.toLocaleDateString() : "—" },
     { k: "% done", v: `${project.percentDone}%` },
     { k: "% invoiced", v: `${project.percentInvoiced}%` },
     { k: "Contract", v: centsToDollars(project.contractValueCents) },
@@ -64,6 +66,12 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           ))}
         </dl>
       </div>
+
+      <ProjectDatesEditor
+        projectId={project.id}
+        projectDateIso={project.projectDate ? project.projectDate.toISOString() : null}
+        projectEndDateIso={project.projectEndDate ? project.projectEndDate.toISOString() : null}
+      />
 
       <ProjectLaborSection projectId={project.id} initialEntries={laborRows} />
     </div>

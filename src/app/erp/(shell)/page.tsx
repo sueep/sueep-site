@@ -63,9 +63,14 @@ export default async function ErpDashboardPage() {
           <li>Point DNS <code className="text-pink-400">app.sueep.com</code> at this deployment — middleware rewrites to{" "}
             <code className="text-zinc-500">/erp</code>.</li>
         </ul>
-        <Link href="/erp/projects" className="mt-4 inline-block text-sm font-medium text-pink-400 hover:underline">
-          Go to projects →
-        </Link>
+        <div className="mt-4 flex flex-wrap gap-4">
+          <Link href="/erp/schedule" className="text-sm font-medium text-pink-400 hover:underline">
+            Schedule (calendar & Gantt) →
+          </Link>
+          <Link href="/erp/projects" className="text-sm font-medium text-pink-400 hover:underline">
+            Go to projects →
+          </Link>
+        </div>
       </div>
     </div>
   );

@@ -25,6 +25,8 @@ model Project {
 
   /// Primary / job-start date shown on PM dashboard
   projectDate DateTime?
+  /// Target end / handoff — drives calendar span & Gantt bar end (optional)
+  projectEndDate DateTime?
 
   jobTitle    String
   supervisor  String?

@@ -24,6 +24,7 @@ export function NewProjectForm() {
       supervisor: fd.get("supervisor") || undefined,
       description: fd.get("description") || undefined,
       projectDate: fd.get("projectDate") || undefined,
+      projectEndDate: fd.get("projectEndDate") || undefined,
       percentDone: fd.get("percentDone") || undefined,
       percentInvoiced: fd.get("percentInvoiced") || undefined,
       contractValue: fd.get("contractValue") || undefined,
@@ -59,7 +60,7 @@ export function NewProjectForm() {
 
   return (
     <form onSubmit={onSubmit} className="space-y-6 rounded-lg border border-zinc-800 bg-zinc-900/40 p-6">
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-3">
         <div>
           <label className={label} htmlFor="segment">
             Segment
@@ -71,9 +72,15 @@ export function NewProjectForm() {
         </div>
         <div>
           <label className={label} htmlFor="projectDate">
-            Project date
+            Start date
           </label>
           <input id="projectDate" name="projectDate" type="date" className={input} />
+        </div>
+        <div>
+          <label className={label} htmlFor="projectEndDate">
+            Target end (optional)
+          </label>
+          <input id="projectEndDate" name="projectEndDate" type="date" className={input} />
         </div>
       </div>
       <div>

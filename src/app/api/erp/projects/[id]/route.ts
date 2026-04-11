@@ -55,6 +55,12 @@ export async function PATCH(req: Request, ctx: Ctx) {
         ? null
         : new Date(String(body.projectDate));
   }
+  if (body.projectEndDate !== undefined) {
+    data.projectEndDate =
+      body.projectEndDate === null || body.projectEndDate === ""
+        ? null
+        : new Date(String(body.projectEndDate));
+  }
   if (body.percentDone !== undefined) data.percentDone = pct(body.percentDone) ?? 0;
   if (body.percentInvoiced !== undefined) data.percentInvoiced = pct(body.percentInvoiced) ?? 0;
   if (body.segment !== undefined) {
