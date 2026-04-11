@@ -10,7 +10,8 @@
     "postinstall": "prisma generate",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "hubspot:pipelines": "node --env-file=.env.local scripts/hubspot-export-pipelines.mjs"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",
